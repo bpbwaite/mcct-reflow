@@ -1,51 +1,126 @@
-# MCCT firmware (MS51FB9AE)
+# MCCT firmware: 350 W soldering hot plate (Nuvoton MS51FB9AE)
 
-Toolchain: SDCC 4.6.0, installed locally in `../tools/sdcc` (not on PATH).
-Flashing: Arduino Uno running the `nuvo51icp` ISP-to-ICP bridge sketch, driven by
-`../tools/nuvoispy.ps1` (wiring: D11 -> ICPDA, D12 -> ICPCK, D13 -> nRESET, GND -> VSS).
+Constant-temperature and reflow controller for a hot plate with a 3-digit
+7-segment display, three buttons and a zero-cross optotriac heater switch.
+SDCC 4.6, 16 KB flash, 256 B IRAM, 1 KB XRAM. Decisions made without
+information are listed in [ASSUMPTIONS.md](ASSUMPTIONS.md) for review.
+
+## Using it
+
+| Screen | What you see | Buttons |
+|---|---|---|
+| boot | `[=]` | |
+| standby | target, flashing | UP/DOWN: target (30..350 degC, held = faster). ENTER: heat. Hold ENTER: menu |
+| heating | plate temperature; right decimal point = heater on | UP/DOWN: target (shown for 2 s). ENTER: stop. Hold ENTER: menu |
+| menu | `rFL` `tun` `P` `I` `d` `OFS` `rSt` | UP/DOWN: browse. ENTER: open. Hold ENTER: back |
+| reflow / auto-tune | plate temperature, decimal points sweep; flashes twice at each reflow waypoint | any button cancels |
+| `End` / `Err` | run finished / gave up | any button: standby |
+| idle | snake animation: above 120 degC with no input for 10 min, the heater turns off | any button: standby |
+| `uuu` flashing | fatal fault, heater off | cycle the power |
+
+Menu: `rFL` pick a profile by its label and ENTER starts it; `tun` pick the
+auto-tune temperature and ENTER starts it (results are saved); `P`/`I`/`d`
+show and edit Kp (%/degC), Ti and Td (s); `OFS` adds an offset to the
+reading; `rSt` restores defaults. Settings are saved 3 s after the last change.
+
+## Build, test, flash
 
 ```powershell
-.\build.ps1                 # build -> build\mcct.hex, build\mcct.bin
-.\build.ps1 -Clean          # clean rebuild
-.\build.ps1 -Status         # read chip ID/config through the bridge (COM8)
-.\build.ps1 -Flash          # build and write APROM (add -Port COMx if needed)
-.\build.ps1 -Monitor        # open the chip's UART1 console through the bridge (Ctrl+] quits)
-.\build.ps1 -Flash -Monitor # flash, then open the console
+.\build.ps1                    # build -> build\mcct.bin (prints flash/RAM use)
+.\build.ps1 -Test              # unit tests in the 8051 simulator (~70 s)
+.\build.ps1 -Flash             # build, write APROM + CONFIG bytes via the Arduino bridge
+.\build.ps1 -Sim -Flash        # bench build: boots into a simulated hot plate
+.\build.ps1 -Monitor           # debug console (Ctrl+] quits)
+.\build.ps1 -Status            # read the chip ID / CONFIG
 ```
 
-In VS Code: Ctrl+Shift+B builds; *Terminal > Run Task* has Flash, Flash + Monitor,
-Serial Monitor and Status.
+Toolchain and bridge setup: `../INSTALL.md`, `../tools/AGENTS.md`.
 
-## Debug console
-UART1 uses the ICP pins (TX = P1.6/ICPDA, RX = P0.2/ICPCK), so the Arduino bridge
-also acts as a serial adapter: between flashes it releases reset and passes
-USB <-> UART1 through at 38400 baud (`CONSOLE_BAUD` in `inc/console.h` must match
-`PASSTHROUGH_BAUD` in the bridge). `printf_tiny()`/`putchar()` go to the console,
-`console_getc()` reads without blocking. Flashing switches the bridge to ICP
-automatically; the monitor must be closed first since only one program can hold
-the COM port. Opening the monitor restarts the chip. Bridge details:
-`../tools/AGENTS.md`; rebuild/upload it with `../tools/bridge.ps1`.
+## Configuration
 
-## Layout
-- `src/` – application sources (every `*.c` is compiled; `main.c` is linked first)
-- `inc/` – project headers
-- Nuvoton MS51 16K BSP (Apache-2.0): the `../tools/MS51_BSP` git submodule, used
-  unmodified from `MS51FB9AE_MS51XB9AE_MS51XB9BE/Library/`
-  - `Device/Include/` – register (SFR) names, bit set/clear macros, pin-mode helpers
-  - `StdDriver/` – drivers (ADC, UART, timers, I2C, SPI, PWM, IAP/EEPROM, WDT, WKT…)
+- `config/user_config.h`: **every** firmware option: temperature limits,
+  safety thresholds, timings, PID and model defaults, button feel, debug.
+- `config/chip_config.json`: the MS51 CONFIG bytes (lock, hardware watchdog,
+  brown-out), written on every `-Flash`.
+- `profiles/*.json`: up to three reflow profiles, validated and compiled in.
+- `calibration/adc_to_temperature.csv`: sensor calibration points; a
+  polynomial is fitted at build time.
 
-`#include "numicro_8051.h"` pulls in all of the above. The drivers are built into
-`build/obj/ms51bsp.lib`, so only the modules you call end up in the image
-(`sdcc_stdio.c` and `putchar.c` are skipped; `src/console.c` replaces them).
-Nuvoton's ~50 SDCC sample programs are in
-`../tools/MS51_BSP/MS51FB9AE_MS51XB9AE_MS51XB9BE/SampleCode`.
+### Reflow profiles
+```json
+{ "name": "SAC305", "label": "SAC",
+  "waypoints": [ { "temp_c": 150, "ramp_s": 100, "hold_s": 0 }, ... ] }
+```
+For each waypoint the setpoint ramps linearly to `temp_c` over `ramp_s`, the
+controller waits for the plate to get there (display flashes twice), then
+holds `hold_s`. `label` is what the display shows (1-3 characters the font
+has). A heating waypoint not reached within 180 s aborts with `Err`.
 
-## Current example
-`src/main.c` reads package pin 3 (P0.7 / ADC_CH2) every 500 ms and prints the
-raw value and an estimated mV (assuming `VDD_MV` = 5000) on the debug console.
-Keys: `p` pauses/resumes, `r` reads once, anything else is echoed.
+### Calibrating the sensor
+1. Bring the plate to a series of steady temperatures across the range
+   (constant-temperature mode is fine), with a calibrated surface probe on it.
+2. Log the console telemetry (`t`): the `mv` column is the voltage at pin 3.
+3. Put the `voltage_v,temperature_c` pairs into
+   `calibration/adc_to_temperature.csv` and rebuild. The build prints the fit
+   residual; the test suite checks that the chip evaluates the polynomial
+   exactly as fitted.
 
-## Notes
-- `__SDCC__` is defined by the build because the Nuvoton headers test for it.
-- Memory model is small (`$Model` in `build.ps1`); 16 KB APROM (no LDROM),
-  256 B IRAM, 1 KB XRAM. The BSP's own SDCC samples use the large model.
+The fit is a least-squares polynomial in u = V/VDD, evaluated by Horner's
+rule in 32-bit fixed point: no lookup table, ~200 bytes of code.
+
+## How it works
+
+```
+src/
+  main.c      boot, main loop, fatal handling
+  board/      clock, pin map (pins.h), watchdog, reset cause, 2 kHz tick ISR
+  display/    segment-multiplexed driver + button sampling, font, rendering
+  input/      debounce, long press, accelerating auto-repeat
+  sensor/     ADC window averaging (ISR), calibration polynomial
+  control/    heater PDM, thermal model, PID, controller, reflow, auto-tune
+  safety/     fault supervisor
+  storage/    flash IAP, wear-levelled settings
+  app/        process (what runs) and UI (what you see)
+  debug/      UART console, telemetry, simulated hot plate
+test/         unit tests (run in ucsim) + fakes for the hardware drivers
+scripts/      code generators, HIL console driver (hil.py)
+```
+
+- **Timing.** Timer2 interrupts at 2 kHz: one display slot, one ADC
+  conversion, the millisecond clock. Everything else runs in the main loop:
+  one control step per finished ADC window (250 ms = 500 samples = exactly
+  15 cycles of 60 Hz, so mains hum averages out), one UI step per 10 ms.
+- **Display.** One *segment* per slot across all three digits, plus a dark
+  slot in which the button lines (shared with segments F and B) are read:
+  222 Hz refresh, equal brightness for every digit.
+- **Control.** setpoint ramp (model-limited, eased into the target) ->
+  feed-forward from the thermal model (power to hold + power to ramp) ->
+  PID on the residual (derivative on filtered error, conditional
+  anti-windup) -> heater duty -> sigma-delta pulse-density modulation in
+  5-cycle quanta for the zero-cross optotriac.
+- **Thermal model.** `power = LOSS*(T - ambient) + CAP*dT/dt`. It sets how fast
+  the setpoint may ramp and supplies the feed-forward; the auto-tuner measures
+  LOSS and CAP. A richer model only has to replace `control/thermal_model.c`.
+- **Safety.** Independent of the controller, every 250 ms: sensor rails,
+  over-temperature, heating timeout, stuck heater, missing samples. Plus a
+  dead-man on the heater output (off if not refreshed for 1 s), the hardware
+  watchdog (enabled in CONFIG, verified at boot), and a watchdog reset at
+  boot is itself fatal.
+
+## Debug console and HIL
+
+UART1 on the ICP pins, through the Arduino bridge at 38400 baud. Keys:
+`u d e E` press UP/DOWN/ENTER/long ENTER, `t` telemetry
+(`ms,mv,pv,sp,duty,heater,mode,p,i,d`, one line per 250 ms), `s` settings,
+`S` simulated plate on/off, `W` hang (watchdog test; both bench builds only).
+`scripts/hil.py` scripts a session:
+
+```powershell
+..\tools\venv\Scripts\python.exe scripts\hil.py COM8 "wait:2 key:t key:e wait:240" --log run.csv
+```
+
+## Size
+
+Product build: about 15.2 KB of 15.75 KB code (the last 256 bytes of flash
+hold the settings), ~120 B of internal RAM plus 117 B stack, 260 B XRAM.
+`-Sim` bench build: about 16.0 KB.

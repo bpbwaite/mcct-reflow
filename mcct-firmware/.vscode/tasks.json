@@ -19,6 +19,20 @@
             }
         },
         {
+            "label": "Unit Tests (8051 simulator)",
+            "type": "shell",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File build.ps1 -Test",
+            "group": { "kind": "test", "isDefault": true },
+            "problemMatcher": []
+        },
+        {
+            "label": "Bench Build + Flash (simulated plate)",
+            "type": "shell",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File build.ps1 -Sim -Flash -Port ${input:port}",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
             "label": "Clean Build",
             "type": "shell",
             "command": "powershell -NoProfile -ExecutionPolicy Bypass -File build.ps1 -Clean",

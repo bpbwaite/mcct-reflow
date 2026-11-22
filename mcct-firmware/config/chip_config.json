@@ -1,0 +1,23 @@
+{
+    "_comment": [
+        "MS51 CONFIG bytes, written by build.ps1 -Flash (nuvoispy -c). Chip options only;",
+        "every firmware option is in user_config.h.",
+        "lock: true makes the flash unreadable over ICP (a later flash mass-erases it). Set it for production.",
+        "WDT_enable: hardware watchdog as a reset timer that software cannot disable. The firmware",
+        "  refuses to run without it (CFG_REQUIRE_HW_WATCHDOG). WDT_keep_active: false = it pauses",
+        "  in idle/power-down (the firmware never sleeps).",
+        "brownout: reset below 3.7 V (the ADC is referenced to VDD, so readings below that are",
+        "  meaningless) and no flash writes while VDD is low.",
+        "OCD_enable: on-chip debugger off (its pins are the console)."
+    ],
+    "lock": false,
+    "boot_from_ldrom": false,
+    "ldrom_size": 0,
+    "OCD_enable": false,
+    "brownout_detect": true,
+    "brownout_reset": true,
+    "brownout_voltage": 3.7,
+    "brownout_inhibits_IAP": true,
+    "WDT_enable": true,
+    "WDT_keep_active": false
+}

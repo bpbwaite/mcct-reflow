@@ -1,0 +1,10 @@
+{
+  "name": "Sn63/Pb37 (leaded, 183 degC eutectic)",
+  "label": "Pb",
+  "waypoints": [
+    { "temp_c": 150, "ramp_s": 100, "hold_s": 0 },
+    { "temp_c": 180, "ramp_s": 90,  "hold_s": 0 },
+    { "temp_c": 220, "ramp_s": 40,  "hold_s": 20 },
+    { "temp_c": 100, "ramp_s": 120, "hold_s": 0 }
+  ]
+}

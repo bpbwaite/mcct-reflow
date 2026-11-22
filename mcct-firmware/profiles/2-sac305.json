@@ -1,0 +1,10 @@
+{
+  "name": "SAC305 (lead-free, 217-220 degC)",
+  "label": "SAC",
+  "waypoints": [
+    { "temp_c": 150, "ramp_s": 100, "hold_s": 0 },
+    { "temp_c": 185, "ramp_s": 90,  "hold_s": 0 },
+    { "temp_c": 245, "ramp_s": 50,  "hold_s": 15 },
+    { "temp_c": 100, "ramp_s": 120, "hold_s": 0 }
+  ]
+}

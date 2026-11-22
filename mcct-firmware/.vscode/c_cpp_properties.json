@@ -7,7 +7,9 @@
             "cStandard": "c11",
             "intelliSenseMode": "windows-gcc-x86",
             "includePath": [
-                "${workspaceFolder}/inc",
+                "${workspaceFolder}/src",
+                "${workspaceFolder}/config",
+                "${workspaceFolder}/build/generated",
                 "${workspaceFolder}/../tools/MS51_BSP/MS51FB9AE_MS51XB9AE_MS51XB9BE/Library/Device/Include",
                 "${workspaceFolder}/../tools/MS51_BSP/MS51FB9AE_MS51XB9AE_MS51XB9BE/Library/StdDriver/inc",
                 "${workspaceFolder}/../tools/sdcc/include/mcs51",
@@ -15,6 +17,7 @@
             ],
             "defines": [
                 "__SDCC__",
+                "SETTINGS_FLASH_BASE=0x3F00",
                 "__SDCC=4_6_0",
                 "__SDCC_mcs51=1",
                 "__SDCC_MODEL_SMALL=1",

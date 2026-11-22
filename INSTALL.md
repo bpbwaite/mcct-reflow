@@ -68,12 +68,17 @@ Find the Uno's port with `tools\arduino-cli\arduino-cli.exe board list`
 ```powershell
 cd mcct-firmware
 .\build.ps1                         # compile -> build\mcct.bin
+.\build.ps1 -Test                   # unit tests in SDCC's 8051 simulator (~70 s)
 .\build.ps1 -Status -Port COM8      # read chip ID and config
 .\build.ps1 -Flash -Monitor -Port COM8
+.\build.ps1 -Sim -Flash -Port COM8  # bench build: simulated hot plate, heater held off
 ```
-`-Monitor` opens the chip's debug console (38400 on the chip, 115200 on the
-Uno's port); Ctrl+] quits. Close it before flashing again. In VS Code the
-same actions are under Terminal > Run Task.
+`-Flash` also writes the CONFIG bytes from `config/chip_config.json`
+(hardware watchdog on, brown-out reset). `-Monitor` opens the chip's debug
+console (38400 on the chip, 115200 on the Uno's port); Ctrl+] quits. Close
+it before flashing again. Without a temperature sensor connected, the
+product build stops with a sensor fault (`uuu`); use `-Sim` on the bench.
+In VS Code the same actions are under Terminal > Run Task.
 
 ## Notes
 - **Locked chips**: new chips may arrive locked. Flashing mass-erases them

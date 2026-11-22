@@ -1,0 +1,26 @@
+# MCCT sensor calibration: voltage at MCU pin 3 (P0.7) vs plate surface temperature.
+#
+# PLACEHOLDER DATA: an ideal 10 mV/degC sensor (0 V = 0 degC). Replace these
+# rows with pairs measured during HIL calibration: log "mv" from the console
+# telemetry (console key 't') next to a calibrated surface probe, at plateaus
+# spread over the whole working range (e.g. every 25 degC from room temperature
+# to 375 degC). Then rebuild; build.ps1 refits the polynomial and prints the
+# residuals.
+#
+# Accepted reading columns: voltage_v (with vdd_v below), adc_fraction (0..1)
+# or adc_raw (12-bit mean, 0..4095).
+#
+# vdd_v = 5.0
+# degree = 3
+voltage_v,temperature_c
+0.00,0
+0.25,25
+0.50,50
+1.00,100
+1.50,150
+2.00,200
+2.50,250
+3.00,300
+3.50,350
+4.00,400
+4.50,450

@@ -1,0 +1,63 @@
+{
+    "version": "2.0.0",
+    "options": {
+        "cwd": "${workspaceFolder}"
+    },
+    "tasks": [
+        {
+            "label": "Build",
+            "type": "shell",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File build.ps1",
+            "group": { "kind": "build", "isDefault": true },
+            "problemMatcher": {
+                "owner": "sdcc",
+                "fileLocation": "absolute",
+                "pattern": {
+                    "regexp": "^(.*):(\\d+): (warning|error|syntax error)[^:]*: (.*)$",
+                    "file": 1, "line": 2, "severity": 3, "message": 4
+                }
+            }
+        },
+        {
+            "label": "Clean Build",
+            "type": "shell",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File build.ps1 -Clean",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Build + Flash (Arduino ICP)",
+            "type": "shell",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File build.ps1 -Flash -Port ${input:port}",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Build + Flash + Monitor",
+            "type": "shell",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File build.ps1 -Flash -Monitor -Port ${input:port}",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Serial Monitor (bridge passthrough)",
+            "type": "shell",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File build.ps1 -Monitor -Port ${input:port}",
+            "problemMatcher": []
+        },
+        {
+            "label": "Chip Status (Arduino ICP)",
+            "type": "shell",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File build.ps1 -Status -Port ${input:port}",
+            "problemMatcher": []
+        }
+    ],
+    "inputs": [
+        {
+            "id": "port",
+            "type": "promptString",
+            "description": "Arduino serial port",
+            "default": "COM8"
+        }
+    ]
+}

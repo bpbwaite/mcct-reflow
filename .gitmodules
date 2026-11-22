@@ -1,0 +1,7 @@
+[submodule "tools/MS51_BSP"]
+	path = tools/MS51_BSP
+	url = https://github.com/OpenNuvoton/MS51_BSP.git
+[submodule "tools/NuMicro-8051-prog"]
+	path = tools/NuMicro-8051-prog
+	url = https://github.com/nikitalita/NuMicro-8051-prog.git
+	ignore = dirty

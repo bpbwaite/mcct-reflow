@@ -1,0 +1,202 @@
+(kicad_sch
+	(version 20260306)
+	(generator "eeschema")
+	(generator_version "10.0")
+	(uuid "c9b01fdd-e7fd-4266-a6f2-254c98b01aee")
+	(paper "A4")
+	(title_block
+		(title "SW1010 MCCT")
+		(rev "V1.96")
+	)
+	(lib_symbols)
+	(sheet
+		(at 13.97 25.4)
+		(size 12.7 3.81)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "175ea55e-3eaa-495b-8853-b316ee701da2")
+		(property "Sheetname" "Analog"
+			(at 13.97 24.6884 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "opamp.kicad_sch"
+			(at 13.97 29.7946 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "mcct"
+				(path "/c9b01fdd-e7fd-4266-a6f2-254c98b01aee"
+					(page "4")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 13.97 34.29)
+		(size 12.7 3.81)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "a6392942-e59f-45eb-a627-1ff0157991af")
+		(property "Sheetname" "Micro"
+			(at 13.97 33.5784 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "mcu.kicad_sch"
+			(at 13.97 38.6846 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "mcct"
+				(path "/c9b01fdd-e7fd-4266-a6f2-254c98b01aee"
+					(page "3")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 13.97 43.18)
+		(size 12.7 3.81)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "a8195a3a-c91e-4488-89bd-6f4977dcb558")
+		(property "Sheetname" "Board Misc"
+			(at 13.97 42.4684 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "deco.kicad_sch"
+			(at 13.97 47.5746 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "mcct"
+				(path "/c9b01fdd-e7fd-4266-a6f2-254c98b01aee"
+					(page "5")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 13.97 16.51)
+		(size 12.7 3.81)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "f883b9fa-7428-490e-93c7-dc9b47d5cca1")
+		(property "Sheetname" "Power"
+			(at 13.97 15.7984 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "power.kicad_sch"
+			(at 13.97 20.9046 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "mcct"
+				(path "/c9b01fdd-e7fd-4266-a6f2-254c98b01aee"
+					(page "2")
+				)
+			)
+		)
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)

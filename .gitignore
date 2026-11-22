@@ -1,0 +1,14 @@
+docs/
+tools/__pycache__/
+tools/_downloads/
+# Downloaded / generated toolchains (see INSTALL.md)
+tools/sdcc/
+tools/venv/
+tools/arduino-cli/
+
+# icp_probe build inputs copied from the NuMicro-8051-prog submodule by bridge.ps1 -Probe
+tools/icp_probe/arduino.cpp
+tools/icp_probe/delay.h
+tools/icp_probe/n51_icp.c
+tools/icp_probe/n51_icp.h
+tools/icp_probe/n51_pgm.h

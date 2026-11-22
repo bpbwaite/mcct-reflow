@@ -1,0 +1,45 @@
+{
+    "version": 4,
+    "configurations": [
+        {
+            "name": "MS51FB9AE (SDCC)",
+            "compilerPath": "",
+            "cStandard": "c11",
+            "intelliSenseMode": "windows-gcc-x86",
+            "includePath": [
+                "${workspaceFolder}/inc",
+                "${workspaceFolder}/../tools/MS51_BSP/MS51FB9AE_MS51XB9AE_MS51XB9BE/Library/Device/Include",
+                "${workspaceFolder}/../tools/MS51_BSP/MS51FB9AE_MS51XB9AE_MS51XB9BE/Library/StdDriver/inc",
+                "${workspaceFolder}/../tools/sdcc/include/mcs51",
+                "${workspaceFolder}/../tools/sdcc/include"
+            ],
+            "defines": [
+                "__SDCC__",
+                "__SDCC=4_6_0",
+                "__SDCC_mcs51=1",
+                "__SDCC_MODEL_SMALL=1",
+                "SDCC=460",
+                "__sfr=volatile unsigned char",
+                "__sfr16=volatile unsigned short",
+                "__sfr32=volatile unsigned long",
+                "__sbit=volatile _Bool",
+                "__bit=_Bool",
+                "__at(x)=",
+                "__interrupt(x)=",
+                "__using(x)=",
+                "__critical=",
+                "__reentrant=",
+                "__naked=",
+                "__data=",
+                "__idata=",
+                "__pdata=",
+                "__xdata=",
+                "__code=const",
+                "__near=",
+                "__far=",
+                "__asm=",
+                "__endasm="
+            ]
+        }
+    ]
+}

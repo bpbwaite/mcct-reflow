@@ -1,0 +1,2 @@
+# Keep the exported patch byte-exact (it contains CRLF lines from upstream .ino files)
+*.patch -text

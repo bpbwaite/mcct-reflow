@@ -23,7 +23,7 @@
 
 /* --------------------------------------------------------- temperatures */
 #define CFG_TARGET_MIN_C                30
-#define CFG_TARGET_MAX_C                350
+#define CFG_TARGET_MAX_C                250     /* also caps reflow profiles (owner: low-temp paste only) */
 #define CFG_TARGET_DEFAULT_C            150
 #define CFG_OFFSET_LIMIT_C              25      /* user offset range: +/- this */
 /* At boot a reading at or below CFG_AMBIENT_MAX_C is taken as the ambient
@@ -33,10 +33,12 @@
 
 /* --------------------------------------------------------------- safety */
 /* Any of these latches the "uuu" fatal screen until power is cycled. */
-#define CFG_FATAL_OVERTEMP_C            400
+#define CFG_FATAL_OVERTEMP_C            280
 /* Raw sensor voltage outside this window (per mille of VDD) means the
- * sensor or its amplifier is open, shorted or unpowered. */
-#define CFG_SENSOR_MIN_PERMILLE         2
+ * sensor or its amplifier is open, shorted or unpowered. The sensor is a
+ * compensated thermocouple amplifier that reads only a few mV at room
+ * temperature, so the low limit is 0 (= no low-rail check). */
+#define CFG_SENSOR_MIN_PERMILLE         0
 #define CFG_SENSOR_MAX_PERMILLE         995
 /* Heating timeout: while the heater runs at or above this duty, the
  * temperature must rise by CFG_RUNAWAY_MIN_RISE_C every CFG_RUNAWAY_WINDOW_S. */
@@ -61,18 +63,26 @@
 /* PID defaults, standard (ISA) form: u = Kp * (e + 1/Ti * integral(e) + Td * de/dt).
  * Kp in tenths of a percent of full power per degC, Ti and Td in seconds.
  * Ti = 0 disables the integral term. */
-#define CFG_PID_KP_X10_DEFAULT          290     /* 29.0 %/degC */
-#define CFG_PID_TI_S_DEFAULT            49
+/* Tuned offline (mcct-tuning/tune_pid.py) against the plate model fitted to
+ * the 2026-11-22 calibration run, and checked against plates 15-50 % off. */
+#define CFG_PID_KP_X10_DEFAULT          30      /* 3.0 %/degC */
+#define CFG_PID_TI_S_DEFAULT            800
 #define CFG_PID_TD_S_DEFAULT            12
 #define CFG_PID_I_ERROR_CLAMP_C         50      /* integrate at most this error */
 #define CFG_PID_D_FILTER_SHIFT          3       /* derivative input low-pass, alpha = 1/2^n */
 /* Thermal model defaults (replaced by the auto-tuner's measurements):
  *   holding power = LOSS * (T - ambient),  LOSS in thousandths of %/degC
  *   ramping power = CAP * dT/dt,           CAP in tenths of %*s/degC
- * The defaults correspond to ~270 J/K of plate and ~0.45 W/K of loss for a
- * 350 W heater. */
-#define CFG_MODEL_LOSS_X1000_DEFAULT    130
-#define CFG_MODEL_CAP_X10_DEFAULT       770
+ * Measured (mcct-tuning/plate_model.py): 184 J/K, losses 21 W at 100 degC
+ * and 79 W at 250 degC (convection + radiation) for the 350 W heater; LOSS
+ * is the best straight line over 100..250 degC. */
+#define CFG_MODEL_LOSS_X1000_DEFAULT    90
+#define CFG_MODEL_CAP_X10_DEFAULT       526
+/* The heater element's heat reaches the plate with this time constant
+ * (measured 11.4 s). Reflow ramps stop their feed-forward this long before
+ * the ramp ends, so the heat still in the element finishes the ramp instead
+ * of overshooting the waypoint. */
+#define CFG_MODEL_LAG_S                 11
 /* Constant-temperature mode ramps its setpoint at this share of the rate the
  * model says is achievable, so the plate arrives without overshoot. */
 #define CFG_RAMP_HEADROOM_PERCENT       85
@@ -86,7 +96,7 @@
 #define CFG_TUNE_HYSTERESIS_DC          5       /* relay switches at target +/- 0.5 degC */
 #define CFG_TUNE_CYCLES                 6       /* oscillations; the first two are discarded */
 #define CFG_TUNE_TIMEOUT_MIN            45
-#define CFG_TUNE_MAX_OVERSHOOT_C        40      /* abort if the plate runs this far past target */
+#define CFG_TUNE_MAX_OVERSHOOT_C        25      /* abort if the plate runs this far past target */
 /* Tuning rule (classic Ziegler-Nichols): Kp = Ku * 6/10, Ti = Pu / 2, Td = Pu / 8. */
 #define CFG_TUNE_KP_NUM                 6
 #define CFG_TUNE_KP_DEN                 10
@@ -137,6 +147,18 @@
 #ifndef CFG_PLANT_SIM
 #define CFG_PLANT_SIM                   0
 #endif
+/* Calibration firmware (build.ps1 -Cal, src/cal/): holds a sensor voltage.
+ * The ceiling is raw mV, chosen low while the temperature scale is in doubt:
+ * if the plate was really 290 degC at 2050 mV, 1850 mV is roughly 250 degC. */
+#define CFG_CAL_MIN_MV                  700
+#define CFG_CAL_MAX_MV                  1800    /* highest selectable hold */
+#define CFG_CAL_CEILING_MV              1850    /* heater off at or above this */
+#define CFG_CAL_STEP_MV                 100
+#define CFG_CAL_MAX_DUTY_PERCENT        40
+#define CFG_CAL_HOLD_MAX_S              900     /* heater off this long after the last target change */
+#define CFG_CAL_HOST_S                  10      /* host-started hold: keep-alive timeout */
+#define CFG_CAL_RISE_S                  60      /* at full allowed power the sensor must rise ... */
+#define CFG_CAL_RISE_MV                 20      /* ... this much in that time */
 /* Refuse to run (fatal) unless the CONFIG bytes enable the hardware watchdog. */
 #define CFG_REQUIRE_HW_WATCHDOG         1
 

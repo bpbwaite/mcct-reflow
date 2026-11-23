@@ -44,6 +44,7 @@ def main():
                 sys.stdout.flush()
                 if log:
                     log.write(data)
+                    log.flush()             # readable while the run is going
                 buf += data
                 if until and until in buf:
                     return True

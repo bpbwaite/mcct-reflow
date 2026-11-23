@@ -10,7 +10,7 @@ information are listed in [ASSUMPTIONS.md](ASSUMPTIONS.md) for review.
 | Screen | What you see | Buttons |
 |---|---|---|
 | boot | `[=]` | |
-| standby | target, flashing | UP/DOWN: target (30..350 degC, held = faster). ENTER: heat. Hold ENTER: menu |
+| standby | target, flashing | UP/DOWN: target (30..250 degC, held = faster). ENTER: heat. Hold ENTER: menu |
 | heating | plate temperature; right decimal point = heater on | UP/DOWN: target (shown for 2 s). ENTER: stop. Hold ENTER: menu |
 | menu | `rFL` `tun` `P` `I` `d` `OFS` `rSt` | UP/DOWN: browse. ENTER: open. Hold ENTER: back |
 | reflow / auto-tune | plate temperature, decimal points sweep; flashes twice at each reflow waypoint | any button cancels |

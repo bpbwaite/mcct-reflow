@@ -90,8 +90,20 @@ Open design questions for the owner: ASSUMPTIONS.md.)
   + IAP inhibit, WDT on). nuvoispy prints "WDT is Disabled" for CONFIG4 0x5F;
   its own bit table and the firmware's check (no FATAL 7) say enabled, and
   the `W` hang test proves it resets.
-- The ADC pin currently reads ~0 V on the bench (no sensor signal), so the
-  product build stops with FATAL 2 (sensor). Use `-Sim` for bench work.
+- Sensor: thermocouple + cold-junction-compensated amplifier, powered from
+  the MCU's (isolated) 5 V supply. Room temperature reads well under 1 V,
+  so there is no low-rail fault (CFG_SENSOR_MIN_PERMILLE 0).
+- **Ground loop (2026-11-22):** with the Uno's GND tied to the board (PC
+  earth), pin 3 read ~1.71 V +/-45 mV at 23 degC; without it, a few hundred
+  mV. Don't trust sensor readings taken with the bridge grounded to the
+  plate; use an isolated link (USB isolator / battery laptop) or none.
+- Sensor calibration firmware: `./build.ps1 -Cal` (src/cal/): holds a sensor
+  voltage, no temperature logic; tests `-Cal -Test` (own image: the main one
+  has no internal RAM left). Procedure: `../mcct-tuning/RECALIBRATION.md`.
+  Not yet run on hardware.
+- Telemetry `ms` is a 16-bit clock (wraps every 65.5 s); `mv` is mV of a
+  nominal 5.000 V. The `hil.py` logs and the tuning tools are in
+  `../mcct-tuning/` (README there).
 
 ## Debug console (src/debug)
 - UART1 at `CFG_CONSOLE_BAUD` (38400) = `PASSTHROUGH_BAUD` in the bridge.
@@ -101,15 +113,19 @@ Open design questions for the owner: ASSUMPTIONS.md.)
 - Only one program can hold the COM port: close the monitor before flashing.
 
 ## Status (2026-11-22)
-- Firmware rewritten from scratch; 2571 unit checks pass in ucsim (math,
-  display, buttons, heater PDM, PID, controller, reflow, safety, settings
-  store incl. torn writes, UI flows, closed loop and auto-tune against the
-  simulated plate: +/-0.1 degC steady state, <= 0.5 degC overshoot).
-- HIL on the real chip (bench build, simulated plate): boot, console,
-  CONFIG check, 150 degC hold (peak 150.1, settles at 150.0), settings
-  persist across reset via IAP (a reflash resets them to defaults),
-  watchdog reset -> FATAL 6 latched, full Sn63Pb37 profile (peak 220.3 for
-  220 degC, then passive cool-down to the last waypoint). The chip is left
-  with the `-Sim` bench build.
-- Not verified yet (needs eyes or a scope): display segment mapping and
-  brightness, physical buttons, heater pin waveform, real sensor.
+
+**SUSPECT (2026-11-22): during a 240 degC hold the calibration probe jumped to 290 degC, probably by making better contact with the plate, so the calibration, plate model, PID gains and 250/280 degC limits may all be well off on the hot side. Do not heat with this calibration; redo it with a better probe, then refit and retune.**
+
+- 2574 unit checks pass in ucsim (math, display, buttons, heater PDM, PID,
+  controller, reflow, safety, settings store incl. torn writes, UI flows,
+  closed loop and auto-tune against the simulated plate).
+- Real plate: sensor calibrated from the video run (quadratic, rms 2.3 degC,
+  see ASSUMPTIONS 7-9); plate model fitted and PID tuned offline
+  (`../mcct-tuning/`, ASSUMPTIONS 10-12a); the simulator (`plant_sim.c`)
+  copies the fitted plate. Supply rail measured 5.04 V (readings are
+  ratiometric; the calibration keeps a nominal 5.0 V).
+- HIL bench: the bridge runs on the battery laptop (see Hardware, ground
+  loop). The chip runs the product build. Verified on hardware: display,
+  buttons, sensor, heater, settings persistence across power cycles.
+- Closed-loop holds at 100/150/200/240 degC (indicated) ran; repeatability
+  looks good, absolute temperature is not trustworthy (see above).

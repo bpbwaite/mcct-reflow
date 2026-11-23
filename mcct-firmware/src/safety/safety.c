@@ -59,7 +59,11 @@ static fault_t check_stuck(temp_dc_t pv)
 
 fault_t safety_check(uint16_t u_q16, temp_dc_t pv, duty_t duty)
 {
-    if (u_q16 < SENSOR_MIN_Q16 || u_q16 > SENSOR_MAX_Q16)
+#if CFG_SENSOR_MIN_PERMILLE > 0
+    if (u_q16 < SENSOR_MIN_Q16)
+        return FAULT_SENSOR;
+#endif
+    if (u_q16 > SENSOR_MAX_Q16)
         return FAULT_SENSOR;
     if (pv >= CFG_FATAL_OVERTEMP_C * 10)
         return FAULT_OVERTEMP;

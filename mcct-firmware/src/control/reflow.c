@@ -5,6 +5,7 @@ enum { PHASE_RAMP, PHASE_SETTLE, PHASE_HOLD, PHASE_DONE };
 
 #define TOLERANCE_DC    (CFG_REFLOW_TOLERANCE_C * 10)
 #define SETTLE_STEPS    SECONDS_TO_STEPS(CFG_REFLOW_SETTLE_TIMEOUT_S)
+#define LEAD_STEPS      SECONDS_TO_STEPS(CFG_MODEL_LAG_S)
 
 static __xdata struct {
     uint8_t    wp, end;
@@ -61,7 +62,9 @@ reflow_event_t reflow_step(temp_dc_t pv)
     case PHASE_RAMP:
         if (r.steps < r.ramp_steps) {
             r.sp = r.from + (temp_dc_t)((int32_t)r.span * r.steps / r.ramp_steps);
-            r.rate = r.ramp_rate;
+            /* Heating: drop the slope's feed-forward one heater lag early;
+             * the heat already in the element carries the plate on. */
+            r.rate = (r.span > 0 && r.steps + LEAD_STEPS >= r.ramp_steps) ? 0 : r.ramp_rate;
             return REFLOW_EV_NONE;
         }
         next_phase(PHASE_SETTLE);

@@ -3,11 +3,14 @@
 
 #if CFG_PLANT_SIM
 
+/* The real plate as measured on 2026-11-22 (mcct-tuning/plate_model.py):
+ * 184 J/K, heat reaches it ~11 s after the heater (element 20 J/K through
+ * 2 W/K: tau 10 s), losses ~0.32 W/K averaged over 100..250 degC. */
 #define HEATER_MW_PER_DUTY  35          /* 350 W / 10000 */
-#define ELEMENT_J_PER_K     30
-#define PLATE_J_PER_K       270
-#define LINK_MW_PER_MK      5           /* 5 W/K */
-#define LOSS_MW_PER_MK_X100 45          /* 0.45 W/K */
+#define ELEMENT_J_PER_K     20
+#define PLATE_J_PER_K       165
+#define LINK_MW_PER_MK      2           /* 2 W/K */
+#define LOSS_MW_PER_MK_X100 32          /* 0.32 W/K */
 #define NOISE_MK            60          /* +/- sensor noise */
 
 /* Temperatures in milli-kelvin above 0 degC, powers in mW. */

@@ -33,6 +33,15 @@ void test_reflow(void)
     reflow_start(0, TEMP_DC(25));
     reflow_step(TEMP_DC(25));
     CHECK_EQ(reflow_rate(), (profile_waypoints[0].temp - TEMP_DC(25)) * 10 / profile_waypoints[0].ramp_s);
+    /* ... until one heater lag before the ramp ends, then none (the heat
+     * already in the element finishes the ramp) */
+    for (steps = 1; steps < SECONDS_TO_STEPS(profile_waypoints[0].ramp_s - CFG_MODEL_LAG_S) - 1; steps++)
+        reflow_step(TEMP_DC(25));
+    CHECK(reflow_rate() > 0);
+    reflow_step(TEMP_DC(25));
+    reflow_step(TEMP_DC(25));
+    CHECK_EQ(reflow_rate(), 0);
+    CHECK(reflow_setpoint() < profile_waypoints[0].temp);   /* the setpoint still ramps */
 
     /* a plate that never heats: the first waypoint times out -> FAILED */
     reflow_start(0, TEMP_DC(25));

@@ -18,6 +18,7 @@ param(
     [switch]$Clean,
     [switch]$Test,
     [switch]$Sim,
+    [switch]$Cal,
     [switch]$Flash,
     [switch]$Status,
     [switch]$Monitor,
@@ -65,7 +66,7 @@ $Model    = 'small'
 
 # Modules that touch hardware registers. Everything else is pure logic and
 # is linked into the simulator unit tests (test/fakes.c stands in for these).
-$HardwareSources = @('main.c', 'board\*', 'display\display.c', 'sensor\adc.c',
+$HardwareSources = @('main.c', 'cal\cal_main.c', 'board\*', 'display\display.c', 'sensor\adc.c',
                      'storage\flash.c', 'debug\console.c', 'debug\cli.c')
 
 $IncDirs = @($SrcDir, $ConfigDir, $GenDir,
@@ -162,14 +163,35 @@ Invoke-Python @((Join-Path $Scripts 'gen_profiles.py'),
                 (Join-Path $SrcDir 'display\font.c'),
                 (Join-Path $GenDir 'profiles_gen.c'))
 
-$allSources = @(Get-ChildItem $SrcDir -Recurse -Filter *.c) + @(Get-Item (Join-Path $GenDir 'profiles_gen.c'))
+$allSources = @(Get-ChildItem $SrcDir -Recurse -Filter *.c | Where-Object { $_.Directory.Name -ne 'cal' }) +
+              @(Get-Item (Join-Path $GenDir 'profiles_gen.c'))
+
+# Calibration firmware: its own main() plus only the drivers it uses.
+if ($Cal) {
+    $Target = 'mcct-cal'
+    $ObjDir = Join-Path $OutDir 'cal'
+    New-Item -ItemType Directory -Force $ObjDir | Out-Null
+    $calPatterns = @('cal\*', 'common\*', 'board\*', 'display\*', 'input\*', 'sensor\*',
+                     'control\heater.c', 'debug\console.c')
+    $allSources = @(Get-ChildItem $SrcDir -Recurse -Filter *.c | Where-Object {
+        $rel = $_.FullName.Substring($SrcDir.Length + 1)
+        @($calPatterns | Where-Object { $rel -like $_ }).Count -gt 0 })
+}
 
 # ---- unit tests in the simulator ----
 if ($Test) {
     $testSources = @($allSources | Where-Object { -not (Test-IsHardware $_) })
+    $testFiles = @(Get-ChildItem $TestDir -Filter *.c | Where-Object { $_.Name -ne 'test_cal_hold.c' })
     $testDefs = @('-DUNIT_TEST', '-DCFG_PLANT_SIM=1')     # the closed-loop tests need the plant
+    if ($Cal) {     # own small image: the full one has no internal RAM left
+        $testSources = @(Get-Item (Join-Path $SrcDir 'cal\cal_hold.c'))
+        $testFiles = @(Get-Item (Join-Path $TestDir 'test_cal_hold.c'), (Join-Path $TestDir 'test_main.c'))
+        $testDefs += '-DTEST_CAL'
+        $TestObj = Join-Path $TestObj 'cal'
+        New-Item -ItemType Directory -Force $TestObj | Out-Null
+    }
     $testRels = @(Build-Objects $testSources $TestObj $Root $testDefs) +
-                @(Build-Objects (Get-ChildItem $TestDir -Filter *.c) $TestObj $Root $testDefs)
+                @(Build-Objects $testFiles $TestObj $Root $testDefs)
     $runner = $testRels | Where-Object { (Split-Path $_ -Leaf) -eq 'test_test_main.rel' }
     $testRels = @($runner) + @($testRels | Where-Object { $_ -ne $runner })
     $ihx = Join-Path $TestObj 'tests.ihx'
@@ -204,7 +226,8 @@ if (-not (Test-Path $flagStamp) -or (Get-Content $flagStamp -Raw) -ne $flagText)
 $rels = @(Build-Objects $allSources $ObjDir $Root)
 
 # ---- link (the file containing main() first) ----
-$mainRel = $rels | Where-Object { (Split-Path $_ -Leaf) -eq 'src_main.rel' }
+$mainName = if ($Cal) { 'src_cal_cal_main.rel' } else { 'src_main.rel' }
+$mainRel = $rels | Where-Object { (Split-Path $_ -Leaf) -eq $mainName }
 $rels    = @($mainRel) + @($rels | Where-Object { $_ -ne $mainRel })
 $ihx     = Join-Path $ObjDir "$Target.ihx"
 Write-Host "LD  $Target.ihx"

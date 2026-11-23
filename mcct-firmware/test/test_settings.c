@@ -41,11 +41,11 @@ void test_settings(void)
     settings_load();
     CHECK_EQ(settings.target_c, 139);
     /* ... and the next save still lands (the damaged slot is erased first) */
-    settings.target_c = 260;
+    settings.target_c = 240;
     settings_save();
     settings_defaults();
     settings_load();
-    CHECK_EQ(settings.target_c, 260);
+    CHECK_EQ(settings.target_c, 240);
 
     /* stored values outside the current limits are brought back in range */
     settings.target_c = 1000;

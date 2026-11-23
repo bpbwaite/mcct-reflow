@@ -79,6 +79,9 @@ static void hold_check(temp_dc_t target)
 
 void test_closed_loop(void)
 {
+    static __xdata uint8_t i;
+    static __xdata temp_dc_t peak;
+
     settings_defaults();
     proc_apply_settings();
     plant_start();
@@ -88,7 +91,7 @@ void test_closed_loop(void)
 
     /* step down to a lower target, then up to near the top of the range */
     hold_check(TEMP_DC(150));
-    hold_check(TEMP_DC(300));
+    hold_check(TEMP_DC(CFG_TARGET_MAX_C - 10));
 
     /* a reflow profile on the simulated plate completes */
     proc_off();
@@ -96,7 +99,17 @@ void test_closed_loop(void)
     proc_reflow(1);
     plant_run(MINUTES(30), 1);
     CHECK_EQ(last_event, PROC_EV_DONE);
-    CHECK(pv_max <= profile_waypoints[profiles[1].first + 2].temp + 50);
+    peak = 0;                                       /* the profile's hottest waypoint */
+    for (i = 0; i < profiles[1].count; i++)
+        if (profile_waypoints[profiles[1].first + i].temp > peak)
+            peak = profile_waypoints[profiles[1].first + i].temp;
+    test_puts("    reflow peak, waypoint (0.1 degC): ");
+    test_put_int(pv_max);
+    test_puts(" ");
+    test_put_int(peak);
+    test_puts("
+");
+    CHECK(pv_max <= peak + 50);
 }
 
 void test_autotune(void)
@@ -119,10 +132,10 @@ void test_autotune(void)
     report("loss x1000: ", settings.loss_x1000);
     report("cap x10: ", settings.cap_x10);
 
-    /* The simulated plate: 0.45 W/K loss and 300 J/K (plate + element) at
-     * 3.5 W per % -> loss 0.129 %/degC, capacity ~86 %*s/degC. */
-    CHECK_NEAR(settings.loss_x1000, 129, 26);
-    CHECK_NEAR(settings.cap_x10, 860, 260);
+    /* The simulated plate: 0.32 W/K loss and 185 J/K (plate + element) at
+     * 3.5 W per % -> loss 0.091 %/degC, capacity ~53 %*s/degC. */
+    CHECK_NEAR(settings.loss_x1000, 91, 18);
+    CHECK_NEAR(settings.cap_x10, 530, 160);
     CHECK(settings.kp_x10 >= 20 && settings.kp_x10 <= 900);
     CHECK(settings.ti_s >= 5 && settings.ti_s <= 600);
 

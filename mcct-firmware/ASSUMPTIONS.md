@@ -30,30 +30,49 @@ Each says where to change it.
 
 ## Sensor and calibration
 
-7. **The calibration CSV is a placeholder: an ideal 10 mV/degC sensor.**
-   The real curve comes from your HIL calibration run (log `mv` from the
-   telemetry next to a reference probe). On the bench the pin reads ~0 V, so
-   the product build stops with a sensor fault ("uuu", console `FATAL 2`);
-   use the `-Sim` bench build until the sensor is connected.
-8. **Sensor fault = reading below 0.2 % or above 99.5 % of VDD**
-   (`CFG_SENSOR_MIN/MAX_PERMILLE`). Adjust once the real sensor's range is known.
-9. **Polynomial degree 3** (set in the CSV header, 1..4). The generator reports
-   the residuals and warns if the fit isn't monotonic.
+**SUSPECT (2026-11-22): during a 240 degC hold the calibration probe jumped to 290 degC, probably by making better contact with the plate, so the calibration, plate model, PID gains and 250/280 degC limits may all be well off on the hot side. Do not heat with this calibration; redo it with a better probe, then refit and retune.**
+
+7. **Calibration from the 2026-11-22 video run** (`calibration/adc_to_temperature.csv`,
+   made by `mcct-tuning/fit_calibration.py`): the owner filmed the display and a
+   probe on the plate surface through a full-power heat-up to ~300 degC and a
+   39-minute cool-down, and read both into tables. Only the cool-down is
+   fitted: it is slow enough that the sensor and the surface agree, while
+   during heat-up the sensor runs ahead of the surface (2 degC typically, up
+   to 20 degC at full power near 300 degC). Readings are ratiometric, so the
+   CSV keeps a nominal `vdd_v = 5.0` (the rail measures 5.04 V).
+8. **Sensor fault only near the top rail** (99.5 % of VDD); see 16b for why
+   there is no low-rail fault.
+9. **Polynomial degree 2.** A cubic fits no better (rms 2.29 vs 2.30 degC);
+   the remaining scatter is the probe's (its reading jumps up to 10 degC at a
+   steady sensor reading above 250 degC, likely contact), not the sensor's.
 
 ## Control
 
-10. **PID defaults P=29, I=49, D=12 are read as standard (ISA) form:
-    Kp = 29 %/degC, Ti = 49 s, Td = 12 s.** Ti/Td of about 4 matches a
-    Ziegler-Nichols tune with a ~100 s oscillation period, which is typical of
-    a hot plate. If your numbers are parallel-form (Ki, Kd) or a 0..255 output
-    scale, they need converting (`CFG_PID_*_DEFAULT`).
+10. **PID gains are standard (ISA) form, tuned offline: Kp 3.0 %/degC,
+    Ti 800 s, Td 12 s.** `mcct-tuning/tune_pid.py` runs a copy of the
+    firmware's controller against the plate model fitted to the calibration
+    run (`plate_model.py`: 184 J/K, heater lag 11.4 s, convection + radiation
+    loss) and against copies 15-50 % off (heat capacity, loss, heater lag,
+    mains power). Worst case: 1.4 degC overshoot on holds, 2.6 degC at a
+    reflow peak. The slow integral is deliberate: the feed-forward does
+    most of the work, and a faster I overshoots on the slow heater. The
+    spec's P=29 I=49 D=12 (read as ISA) overshot 10 degC on the model.
+    The auto-tuner's Ziegler-Nichols rule gives far hotter gains (Kp 11,
+    Ti 16 on the simulated plate); it still holds +/-1 degC there, but these
+    defaults are the tested ones.
 11. **The derivative acts on the error, not on the measurement.** Every setpoint
     is a ramp here, so there is no derivative kick, and it avoids D fighting P
     during warm-up (which wound up the integral and overshot 2.5 degC on the
     simulated plate; now 0.1-0.5 degC).
-12. **The thermal model's defaults (LOSS 0.130 %/degC, CAP 77.0 %·s/degC)
-    assume ~270 J/K of plate and 0.45 W/K of loss.** The auto-tuner measures
-    both; on the simulated plate it recovered them to within 1 %.
+12. **Thermal model defaults LOSS 0.090 %/degC, CAP 52.6 %·s/degC** from
+    the fitted plate (184 J/K; 21 W to hold 100 degC, 79 W for 250 degC;
+    LOSS is the best straight line over 100..250 degC). The auto-tuner
+    measures both (92 / 534 on the simulated plate, which now copies the
+    measured one).
+12a. **Reflow ramps drop their slope feed-forward 11 s (one heater lag)
+    before the ramp ends** (`CFG_MODEL_LAG_S`). The element keeps delivering
+    heat for that long after the duty drops; without the lead the model
+    overshot reflow waypoints by up to 7 degC, with it 2.7 degC worst case.
 13. **Constant-temperature mode ramps the setpoint** at 85 % of the model's
     best rate and eases into the target with a 30 s exponential
     (`CFG_RAMP_HEADROOM_PERCENT`, `CFG_RAMP_APPROACH_S`). This trades a slower
@@ -69,10 +88,20 @@ Each says where to change it.
 
 16. **"Timeout" in the fatal list = heating timeout**: at >= 80 % power the
     plate must gain 3 degC every 60 s. Plus a stuck-heater check (heater off
-    for 90 s yet +20 degC within 60 s), sensor rails, over-temperature (400
-    degC), lost ADC samples, a watchdog reset at boot, and CONFIG bytes that
+    for 90 s yet +20 degC within 60 s), a sensor at the top rail,
+    over-temperature (280 degC, see 16a), lost ADC samples, a watchdog reset at boot, and CONFIG bytes that
     don't enable the watchdog. Every one shows "uuu" until power is cycled
     (a reset-pin reset also clears it; the Arduino bridge uses that).
+16a. **Over-temperature fault at 280 degC, not the spec's 400 degC.** The
+    owner capped targets and reflow profiles at 250 degC
+    (`CFG_TARGET_MAX_C`) after the plate smelled at 300+ degC in the first
+    calibration run (2026-11-22). The fault sits 30 degC above that, and
+    auto-tune aborts at 25 degC overshoot (was 40) so it trips first; a
+    static assert keeps that ordering. `CFG_FATAL_OVERTEMP_C`.
+16b. **No low-rail sensor fault.** The thermocouple amplifier reads only a
+    few hundred mV at room temperature, so 0 V can't be told apart from a
+    cold plate; only a reading near VDD (open/failed amplifier) is a fault.
+    `CFG_SENSOR_MIN_PERMILLE` (0 = off).
 17. **The 10-minute idle timeout returns to standby (heater off) on a button
     press; it doesn't resume heating.** It applies to standby, heating and the
     menu. Reflow and auto-tune are exempt (they're time-limited themselves:

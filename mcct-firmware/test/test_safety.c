@@ -13,8 +13,12 @@ void test_safety(void)
     safety_reset();
     CHECK_EQ(safety_check(U_OK, TEMP_DC(25), 0), FAULT_NONE);
 
-    /* sensor at either rail */
+    /* sensor at the top rail; 0 V is a legal reading unless a low limit is set */
+#if CFG_SENSOR_MIN_PERMILLE > 0
     CHECK_EQ(safety_check(0, TEMP_DC(25), 0), FAULT_SENSOR);
+#else
+    CHECK_EQ(safety_check(0, TEMP_DC(25), 0), FAULT_NONE);
+#endif
     CHECK_EQ(safety_check(65500u, TEMP_DC(25), 0), FAULT_SENSOR);
 
     /* over-temperature */
@@ -49,7 +53,7 @@ void test_safety(void)
     /* heater off and the plate cooling: never a fault */
     safety_reset();
     f = FAULT_NONE;
-    pv = TEMP_DC(300);
+    pv = TEMP_DC(CFG_TARGET_MAX_C);
     for (i = 0; i < 4000 && f == FAULT_NONE; i++) {
         f = safety_check(U_OK, pv, 0);
         if ((i & 7) == 0)

@@ -64,6 +64,9 @@ void test_check(uint16_t line)
 void main(void)
 {
     test_puts("unit tests (8051 simulator)\n");
+#ifdef TEST_CAL
+    SUITE(test_cal_hold);
+#else
     SUITE(test_fixed);
     SUITE(test_temperature);
     SUITE(test_render);
@@ -77,6 +80,7 @@ void main(void)
     SUITE(test_closed_loop);
     SUITE(test_autotune);
     SUITE(test_ui);
+#endif
 
     test_put_int(test_checks);
     test_puts(" checks, ");

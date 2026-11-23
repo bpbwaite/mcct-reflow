@@ -9,12 +9,14 @@ void test_pid(void)
     static __xdata uint16_t i;
     static __xdata duty_t u, prev;
 
+    /* Fixed gains here (not the defaults), so the arithmetic checks below
+     * don't move when the plate is retuned. */
     /* P: Kp 29.0 %/degC * 0.1 degC = 2.90 % (D off for this one) */
-    pid_set_gains(CFG_PID_KP_X10_DEFAULT, CFG_PID_TI_S_DEFAULT, 0);
+    pid_set_gains(290, 49, 0);
     pid_reset();
     CHECK_EQ(pid_update(2001, 2000, 3000), 3000 + 290 + 1);     /* + first integral step */
 
-    pid_set_gains(CFG_PID_KP_X10_DEFAULT, CFG_PID_TI_S_DEFAULT, CFG_PID_TD_S_DEFAULT);
+    pid_set_gains(290, 49, 12);
 
     /* on target and steady: output = feed-forward */
     pid_reset();

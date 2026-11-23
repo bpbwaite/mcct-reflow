@@ -19,6 +19,7 @@ _Static_assert(1000 % CFG_CONTROL_PERIOD_MS == 0, "CFG_CONTROL_PERIOD_MS must di
 _Static_assert(CFG_CONTROL_PERIOD_MS >= 100 && CFG_CONTROL_PERIOD_MS <= 1000, "control period 100..1000 ms");
 _Static_assert(CFG_TARGET_MIN_C < CFG_TARGET_MAX_C, "target range");
 _Static_assert(CFG_TARGET_MAX_C < CFG_FATAL_OVERTEMP_C, "max target must be below the fatal limit");
+_Static_assert(CFG_TARGET_MAX_C + CFG_TUNE_MAX_OVERSHOOT_C <= CFG_FATAL_OVERTEMP_C, "auto-tune abort must come before the fatal limit");
 _Static_assert(CFG_TARGET_DEFAULT_C >= CFG_TARGET_MIN_C && CFG_TARGET_DEFAULT_C <= CFG_TARGET_MAX_C, "default target");
 _Static_assert(CFG_TUNE_DEFAULT_C >= CFG_TARGET_MIN_C && CFG_TUNE_DEFAULT_C <= CFG_TARGET_MAX_C, "default tune target");
 _Static_assert(CFG_TUNE_CYCLES >= 3, "auto-tune needs at least 3 cycles");

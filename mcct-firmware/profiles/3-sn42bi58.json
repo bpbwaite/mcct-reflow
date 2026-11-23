@@ -2,9 +2,10 @@
   "name": "Sn42/Bi58 (low temperature, 138 degC eutectic)",
   "label": "bi",
   "waypoints": [
-    { "temp_c": 100, "ramp_s": 70, "hold_s": 0 },
-    { "temp_c": 130, "ramp_s": 80, "hold_s": 0 },
-    { "temp_c": 165, "ramp_s": 35, "hold_s": 20 },
-    { "temp_c": 80,  "ramp_s": 90, "hold_s": 0 }
+    { "temp_c": 90, "ramp_s": 90, "hold_s": 0 },
+    { "temp_c": 130, "ramp_s": 90, "hold_s": 0 },
+    { "temp_c": 138, "ramp_s": 30, "hold_s": 0 },
+    { "temp_c": 165,  "ramp_s": 30, "hold_s": 0 },
+    { "temp_c": 138,  "ramp_s": 30, "hold_s": 0 }
   ]
 }

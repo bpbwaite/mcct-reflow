@@ -74,7 +74,7 @@ void test_ui(void)
     press(BTN_UP);
     CHECK(frame_is_text("P"));
     press(BTN_ENTER);                                       /* edit Kp */
-    CHECK(frame_is_text("29.0"));
+    CHECK(frame_is_text(" 3.0"));    /* CFG_PID_KP_X10_DEFAULT, right-aligned */
     press(BTN_UP);
     press(BTN_ENTER);
     CHECK_EQ(settings.kp_x10, CFG_PID_KP_X10_DEFAULT + 1);

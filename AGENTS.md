@@ -464,14 +464,29 @@ Plots go to `out/` (not tracked).
   Use the sensor mV and timing only: the probe had poor contact.
 - `data/plateaus-*.csv`: the 2026-11-23 plateau runs (1, 1b going up, 2 the top
   point and repeats); `.csv.log` is the full telemetry.
-- `logs/`: `hil.py` logs from the bench (telemetry on, key `t`). Their `pv` column is
-  on the first calibration; `mv` and `duty` are still good.
+- `logs/`: `hil.py` logs from the bench (telemetry on, key `t`). In the
+  2026-11-22 ones `pv` is on the first calibration; `mv` and `duty` are still
+  good. `cal-boot`, `check-*` (Ctrl-C and host-lost shutoffs) and `product-*` are
+  the 2026-11-23 bring-up.
 
 ## Bench runs
 
 Sensor readings are only valid with the bridge on the battery laptop (the
 desktop's USB ground corrupts them; see Hardware).
 Runs go in the laptop's tmux session `mcct` so they show on its screen.
+
+## Laptop setup
+
+The bench laptop (`user@laptop`, Linux) keeps nothing that isn't here. To
+recreate `~/bench` (the Uno is at `/dev/ttyACM0`):
+- `python -m venv venv`, then `venv/bin/pip install pyserial`.
+- Copy the contents of `bench/` (`nuvoispy`, `stubs/`, `cal_plateaus.py`),
+  `mcct-firmware/scripts/hil.py` and `tools/NuMicro-8051-prog/nuvoprogpy/`;
+  `mkdir fw logs`; `chmod +x nuvoispy`.
+- `stubs/zmq` stands in for pyzmq, which won't load on Linux and is unused.
+- The login shell is zsh: use `sh -c` for globs.
+- Only use firmware images built on or after 2026-11-23: older ones carry the
+  first calibration (about 55 degC low at 1700 mV).
 
 ## Calibration run
 

@@ -1,2 +1,7 @@
 # Keep the exported patch byte-exact (it contains CRLF lines from upstream .ino files)
 *.patch -text
+# Serial logs as recorded (mixed line endings, garbled bytes)
+*.log -text
+# Laptop (Linux) scripts
+*.sh text eol=lf
+mcct-tuning/bench/nuvoispy text eol=lf

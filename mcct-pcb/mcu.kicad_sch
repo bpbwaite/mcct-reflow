@@ -317,6 +317,341 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "Connector_Generic:Conn_01x02"
+			(pin_names
+				(offset 1.016)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "J"
+				(at 0 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "Conn_01x02"
+				(at 0 -5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "connector"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "Connector*:*_1x??_*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "Conn_01x02_1_1"
+				(rectangle
+					(start -1.27 1.27)
+					(end 1.27 -3.81)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(rectangle
+					(start -1.27 0.127)
+					(end 0 -0.127)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(rectangle
+					(start -1.27 -2.413)
+					(end 0 -2.667)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin passive line
+					(at -5.08 0 0)
+					(length 3.81)
+					(name "Pin_1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 -2.54 0)
+					(length 3.81)
+					(name "Pin_2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "Device:Heater"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "R"
+				(at 2.032 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "Heater"
+				(at -2.032 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at -1.778 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Resistive heater"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "heater R resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "Heater_0_1"
+				(polyline
+					(pts
+						(xy -1.016 1.524) (xy 1.016 1.524)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(rectangle
+					(start -1.016 -2.54)
+					(end 1.016 2.54)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.016 0.508) (xy -1.016 0.508)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.016 -0.508) (xy -1.016 -0.508)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.016 -1.524) (xy -1.016 -1.524)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "Heater_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "Device:R_US"
 			(pin_names
 				(offset 0)
@@ -3053,6 +3388,18 @@
 		(uuid "483621e7-135c-44a1-890a-1bf4c25438a8")
 	)
 	(rectangle
+		(start 142.24 121.92)
+		(end 162.56 147.32)
+		(stroke
+			(width 0)
+			(type dash_dot)
+		)
+		(fill
+			(type none)
+		)
+		(uuid "5555d63b-8be5-4969-bd8d-6216125a3994")
+	)
+	(rectangle
 		(start 15.24 109.22)
 		(end 132.08 186.69)
 		(stroke
@@ -3064,6 +3411,18 @@
 		)
 		(uuid "718485c9-4cd6-4ed9-8b9d-b88c25cf2335")
 	)
+	(rectangle
+		(start 138.43 109.22)
+		(end 166.37 186.69)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(fill
+			(type none)
+		)
+		(uuid "dbcb9689-4be9-4c49-b170-2ed840f82cfc")
+	)
 	(text "triac driver"
 		(exclude_from_sim no)
 		(at 20.828 107.696 0)
@@ -3073,6 +3432,26 @@
 			)
 		)
 		(uuid "03369e01-1c65-4538-bc68-5a4d702a74ef")
+	)
+	(text "* = datasheet value, unconfirmed"
+		(exclude_from_sim no)
+		(at 194.31 168.402 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "3024db72-c3c8-4004-8af8-23b7139ddd80")
+	)
+	(text "*"
+		(exclude_from_sim no)
+		(at 113.792 56.388 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "3ad28299-8e97-48cf-9c1d-623d06b0d52e")
 	)
 	(text "microcontroller"
 		(exclude_from_sim no)
@@ -3093,6 +3472,36 @@
 			)
 		)
 		(uuid "4d544e9c-57ee-4bd1-a1be-ead0446a90ea")
+	)
+	(text "heater"
+		(exclude_from_sim no)
+		(at 141.478 108.204 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "55b73365-fb5e-4522-9174-cbb10f929f8f")
+	)
+	(text "*"
+		(exclude_from_sim no)
+		(at 35.306 80.01 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "b99190e2-6601-4137-a99d-ab9184ff7edc")
+	)
+	(text "off-board"
+		(exclude_from_sim no)
+		(at 146.812 120.65 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "e08b85ac-cbb8-4d5d-9229-b28b7be3b07e")
 	)
 	(junction
 		(at 90.17 118.11)
@@ -3194,10 +3603,6 @@
 		(at 90.17 180.34)
 		(uuid "b88656d6-2018-4ae4-b9b8-45f75c7a08b2")
 	)
-	(no_connect
-		(at 139.7 85.09)
-		(uuid "f26cf538-760e-4128-8371-d5885c899608")
-	)
 	(wire
 		(pts
 			(xy 36.83 80.01) (xy 36.83 81.28)
@@ -3217,6 +3622,16 @@
 			(type default)
 		)
 		(uuid "046e548e-0459-4533-b683-a56f64217e0d")
+	)
+	(wire
+		(pts
+			(xy 156.21 130.81) (xy 156.21 134.62)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "096aa51d-8eda-4c91-8e89-43245be95b6c")
 	)
 	(wire
 		(pts
@@ -3330,16 +3745,6 @@
 	)
 	(wire
 		(pts
-			(xy 139.7 85.09) (xy 133.35 85.09)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "258f91d4-6a3f-42c3-a15c-96ea07241666")
-	)
-	(wire
-		(pts
 			(xy 209.55 121.92) (xy 213.36 121.92)
 		)
 		(stroke
@@ -3350,6 +3755,16 @@
 	)
 	(wire
 		(pts
+			(xy 151.13 134.62) (xy 151.13 135.89)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "29d0bd0c-5242-4b45-a519-ed01a93b0249")
+	)
+	(wire
+		(pts
 			(xy 59.69 157.48) (xy 72.39 157.48)
 		)
 		(stroke
@@ -3357,6 +3772,16 @@
 			(type default)
 		)
 		(uuid "2a201387-4411-43fe-b6bc-26259004a5c7")
+	)
+	(polyline
+		(pts
+			(xy 151.13 144.78) (xy 151.13 149.86)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2c1a4a24-f596-42a7-b708-04fab6b96c14")
 	)
 	(wire
 		(pts
@@ -3437,6 +3862,16 @@
 			(type default)
 		)
 		(uuid "401043a1-4313-4907-ae11-1b58b6b46e64")
+	)
+	(wire
+		(pts
+			(xy 148.59 134.62) (xy 151.13 134.62)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "41c77c37-e973-4547-b1d9-0812f6e57c60")
 	)
 	(wire
 		(pts
@@ -3537,6 +3972,16 @@
 			(type default)
 		)
 		(uuid "5b6102b0-68b4-497b-bdb5-0f8c11cf7182")
+	)
+	(wire
+		(pts
+			(xy 153.67 134.62) (xy 153.67 135.89)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5c613b77-6fae-4f71-87fd-8472f6e81312")
 	)
 	(wire
 		(pts
@@ -4010,6 +4455,16 @@
 	)
 	(wire
 		(pts
+			(xy 148.59 130.81) (xy 148.59 134.62)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "da3d9060-d873-48bb-b30a-ce5127055ef1")
+	)
+	(wire
+		(pts
 			(xy 227.33 76.2) (xy 233.68 76.2)
 		)
 		(stroke
@@ -4030,6 +4485,16 @@
 	)
 	(wire
 		(pts
+			(xy 153.67 134.62) (xy 156.21 134.62)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e2ba53a9-be67-4854-8bda-fd1d034184a6")
+	)
+	(wire
+		(pts
 			(xy 119.38 151.13) (xy 119.38 152.4)
 		)
 		(stroke
@@ -4037,6 +4502,16 @@
 			(type default)
 		)
 		(uuid "eae1e4b9-cf4e-44ef-a9db-901cfe53a48a")
+	)
+	(polyline
+		(pts
+			(xy 153.67 144.78) (xy 153.67 149.86)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ebdbf62e-c0d7-4903-b67a-38c6eea80057")
 	)
 	(wire
 		(pts
@@ -4057,6 +4532,16 @@
 			(type default)
 		)
 		(uuid "efc2fc0b-64cc-434d-bc12-507e8745dad8")
+	)
+	(wire
+		(pts
+			(xy 153.67 162.56) (xy 153.67 161.29)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f0161bf9-6b35-42bd-a0c5-ae408813fa6c")
 	)
 	(wire
 		(pts
@@ -4646,6 +5131,30 @@
 			)
 		)
 	)
+	(global_label "SWITCH1"
+		(shape input)
+		(at 133.35 85.09 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "91e973e2-4a38-4dcb-aa0c-d1ec42cb79cb")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 144.3785 85.09 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+	)
 	(global_label "SEG_F"
 		(shape input)
 		(at 156.21 77.47 0)
@@ -4790,6 +5299,30 @@
 			)
 		)
 	)
+	(global_label "AC_L"
+		(shape input)
+		(at 153.67 162.56 270)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "c2a692a5-5eba-499d-8d71-17d875fc8d16")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 153.67 169.8995 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+	)
 	(global_label "SWITCH3"
 		(shape input)
 		(at 156.21 80.01 0)
@@ -4859,6 +5392,30 @@
 					(size 1.27 1.27)
 				)
 				(justify left)
+			)
+		)
+	)
+	(global_label "TRIAC_AC_OUT"
+		(shape input)
+		(at 151.13 161.29 270)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "d9ee2ada-45d3-4c77-bff5-54c22b3131b7")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 151.13 177.3986 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
 			)
 		)
 	)
@@ -5434,6 +5991,88 @@
 			(project "mcct"
 				(path "/c9b01fdd-e7fd-4266-a6f2-254c98b01aee/a6392942-e59f-45eb-a627-1ff0157991af"
 					(reference "R33")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x02")
+		(at 151.13 140.97 90)
+		(mirror x)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files no)
+		(dnp no)
+		(uuid "203ceeae-f975-4a1e-bd09-75dc3922bc41")
+		(property "Reference" "W3"
+			(at 146.812 140.97 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "Wiring Harness"
+			(at 145.034 143.256 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" ""
+			(at 151.13 140.97 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 151.13 140.97 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 151.13 140.97 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "3c8e26e2-d8cb-4c76-a32a-3b77445a08d7")
+		)
+		(pin "2"
+			(uuid "07e5be8c-84aa-41db-9ade-99de4e345b45")
+		)
+		(instances
+			(project "mcct"
+				(path "/c9b01fdd-e7fd-4266-a6f2-254c98b01aee/a6392942-e59f-45eb-a627-1ff0157991af"
+					(reference "W3")
 					(unit 1)
 				)
 			)
@@ -6272,6 +6911,88 @@
 			(project "mcct"
 				(path "/c9b01fdd-e7fd-4266-a6f2-254c98b01aee/a6392942-e59f-45eb-a627-1ff0157991af"
 					(reference "SW1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x02")
+		(at 153.67 156.21 270)
+		(mirror x)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "6c0cdb07-cbae-4c4e-bccb-d7d2ec1041a1")
+		(property "Reference" "CN2"
+			(at 150.368 151.892 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "JST Connector"
+			(at 145.288 153.67 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical"
+			(at 153.67 156.21 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://www.jst-mfg.com/product/pdf/eng/eVH.pdf"
+			(at 153.67 156.21 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 153.67 156.21 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "2"
+			(uuid "2e294f0d-1e8f-4b13-a7db-48bfa38fe7de")
+		)
+		(pin "1"
+			(uuid "9b747e2b-f6ee-4144-960b-3251ab46b473")
+		)
+		(instances
+			(project "mcct"
+				(path "/c9b01fdd-e7fd-4266-a6f2-254c98b01aee/a6392942-e59f-45eb-a627-1ff0157991af"
+					(reference "CN2")
 					(unit 1)
 				)
 			)
@@ -7249,6 +7970,85 @@
 			(project "mcct"
 				(path "/c9b01fdd-e7fd-4266-a6f2-254c98b01aee/a6392942-e59f-45eb-a627-1ff0157991af"
 					(reference "C12")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:Heater")
+		(at 152.4 130.81 90)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files no)
+		(dnp no)
+		(uuid "c294ae24-377e-48c7-98b3-d2d1434a592e")
+		(property "Reference" "RH1"
+			(at 152.4 124.714 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Heater (33 Ohm)"
+			(at 152.4 127.254 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 152.4 132.588 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 152.4 130.81 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Resistive heater"
+			(at 152.4 130.81 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "2"
+			(uuid "08f231cc-73c5-4c81-8614-79279536f830")
+		)
+		(pin "1"
+			(uuid "b003b44d-dcee-4df7-bed7-36f08eb4af3d")
+		)
+		(instances
+			(project "mcct"
+				(path "/c9b01fdd-e7fd-4266-a6f2-254c98b01aee/a6392942-e59f-45eb-a627-1ff0157991af"
+					(reference "RH1")
 					(unit 1)
 				)
 			)

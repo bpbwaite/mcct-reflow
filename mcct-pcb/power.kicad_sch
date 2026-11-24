@@ -1545,9 +1545,9 @@
 		)
 		(uuid "5c7e5f50-2dc8-4e67-a700-0894bc4942e2")
 	)
-	(text "110 VAC"
+	(text "110 VAC RMS"
 		(exclude_from_sim no)
-		(at 82.55 86.868 0)
+		(at 85.09 86.868 0)
 		(effects
 			(font
 				(size 1.27 1.27)

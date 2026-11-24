@@ -613,9 +613,9 @@
       "default_text_size": 50.0,
       "field_names": [],
       "hop_over_size_choice": 0,
-      "intersheets_ref_own_page": false,
+      "intersheets_ref_own_page": true,
       "intersheets_ref_prefix": "",
-      "intersheets_ref_short": false,
+      "intersheets_ref_short": true,
       "intersheets_ref_show": false,
       "intersheets_ref_suffix": "",
       "junction_size_choice": 3,
@@ -645,7 +645,7 @@
         "uuid": "c9b01fdd-e7fd-4266-a6f2-254c98b01aee"
       }
     ],
-    "used_designators": "CN2,FID5-8,R16,RH1,W3",
+    "used_designators": "CN2,FID5-8,R16,RH1-2,LA1,W3,C1",
     "variants": []
   },
   "sheets": [
@@ -659,7 +659,7 @@
     ],
     [
       "a6392942-e59f-45eb-a627-1ff0157991af",
-      "Micro"
+      "System"
     ],
     [
       "175ea55e-3eaa-495b-8853-b316ee701da2",

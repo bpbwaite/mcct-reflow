@@ -465,7 +465,7 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "Device:C_US"
+		(symbol "Device:C_Polarized_US"
 			(pin_numbers
 				(hide yes)
 			)
@@ -489,7 +489,7 @@
 					(justify left)
 				)
 			)
-			(property "Value" "C_US"
+			(property "Value" "C_Polarized_US"
 				(at 0.635 -2.54 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -522,7 +522,7 @@
 					)
 				)
 			)
-			(property "Description" "capacitor, US symbol"
+			(property "Description" "Polarized capacitor, US symbol"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -544,7 +544,7 @@
 					)
 				)
 			)
-			(property "ki_fp_filters" "C_*"
+			(property "ki_fp_filters" "CP_*"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -555,13 +555,37 @@
 					)
 				)
 			)
-			(symbol "C_US_0_1"
+			(symbol "C_Polarized_US_0_1"
 				(polyline
 					(pts
 						(xy -2.032 0.762) (xy 2.032 0.762)
 					)
 					(stroke
 						(width 0.508)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.778 2.286) (xy -0.762 2.286)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.27 1.778) (xy -1.27 2.794)
+					)
+					(stroke
+						(width 0)
 						(type default)
 					)
 					(fill
@@ -581,7 +605,7 @@
 					)
 				)
 			)
-			(symbol "C_US_1_1"
+			(symbol "C_Polarized_US_1_1"
 				(pin passive line
 					(at 0 3.81 270)
 					(length 2.794)
@@ -1475,7 +1499,7 @@
 	)
 	(rectangle
 		(start 60.96 62.23)
-		(end 104.14 85.09)
+		(end 96.52 85.09)
 		(stroke
 			(width 0)
 			(type default)
@@ -1495,7 +1519,7 @@
 		)
 		(uuid "2b46ed76-c9ff-427e-b378-3a49741d5fa9")
 	)
-	(text "unpopulated footprints"
+	(text "Unpopulated footprints"
 		(exclude_from_sim no)
 		(at 71.882 60.96 0)
 		(effects
@@ -1505,7 +1529,7 @@
 		)
 		(uuid "2c61a468-fd01-424c-baed-e70432117bf2")
 	)
-	(text "debug headers"
+	(text "Debug headers"
 		(exclude_from_sim no)
 		(at 23.622 60.706 0)
 		(effects
@@ -1515,7 +1539,7 @@
 		)
 		(uuid "7477ea7e-ab39-46f1-af91-8fa21a5d39c7")
 	)
-	(text "mounting & assembly"
+	(text "Mounting & Assembly"
 		(exclude_from_sim no)
 		(at 26.924 17.78 0)
 		(effects
@@ -1996,7 +2020,7 @@
 	(symbol
 		(lib_name "R_US_2")
 		(lib_id "Device:R_US")
-		(at 82.55 73.66 90)
+		(at 86.36 71.12 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -2004,10 +2028,9 @@
 		(on_board no)
 		(in_pos_files no)
 		(dnp yes)
-		(fields_autoplaced yes)
 		(uuid "22e3aefe-a9c6-4bda-b7e1-3946b76f88f2")
 		(property "Reference" "R19"
-			(at 82.55 67.31 90)
+			(at 86.614 64.77 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -2017,7 +2040,7 @@
 			)
 		)
 		(property "Value" "Generic 0603"
-			(at 82.55 69.85 90)
+			(at 86.868 66.802 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -2027,7 +2050,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 82.804 72.644 90)
+			(at 86.614 70.104 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2038,7 +2061,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 82.55 73.66 0)
+			(at 86.36 71.12 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2049,7 +2072,7 @@
 			)
 		)
 		(property "Description" "Resistor, US symbol"
-			(at 82.55 73.66 0)
+			(at 86.36 71.12 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2318,7 +2341,7 @@
 	(symbol
 		(lib_name "R_US_1")
 		(lib_id "Device:R_US")
-		(at 96.52 73.66 90)
+		(at 86.36 81.28 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -2326,10 +2349,9 @@
 		(on_board no)
 		(in_pos_files no)
 		(dnp yes)
-		(fields_autoplaced yes)
 		(uuid "336b90f9-d377-4115-a66f-3a40970ee19f")
 		(property "Reference" "R20"
-			(at 96.52 67.31 90)
+			(at 86.36 76.708 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -2339,7 +2361,7 @@
 			)
 		)
 		(property "Value" "Generic 0603"
-			(at 96.52 69.85 90)
+			(at 86.36 78.74 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -2349,7 +2371,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 96.774 72.644 90)
+			(at 86.614 80.264 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2360,7 +2382,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 96.52 73.66 0)
+			(at 86.36 81.28 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2371,7 +2393,7 @@
 			)
 		)
 		(property "Description" "Resistor, US symbol"
-			(at 96.52 73.66 0)
+			(at 86.36 81.28 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2869,7 +2891,7 @@
 	(symbol
 		(lib_name "C_Small_2")
 		(lib_id "Device:C_Small")
-		(at 69.85 81.28 0)
+		(at 69.85 81.28 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -2877,28 +2899,25 @@
 		(on_board no)
 		(in_pos_files no)
 		(dnp yes)
-		(fields_autoplaced yes)
 		(uuid "7f5171ff-1764-4007-9fae-725fbcb539bb")
 		(property "Reference" "C11"
-			(at 72.39 80.0162 0)
+			(at 69.85 75.946 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
 			)
 		)
 		(property "Value" "Generic 0603"
-			(at 72.39 82.5562 0)
+			(at 69.85 77.978 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
@@ -3103,8 +3122,8 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:C_US")
-		(at 69.85 73.66 270)
+		(lib_id "Device:C_Polarized_US")
+		(at 69.85 71.12 270)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -3112,10 +3131,9 @@
 		(on_board no)
 		(in_pos_files no)
 		(dnp yes)
-		(fields_autoplaced yes)
-		(uuid "a4c0a7b7-e4fa-4146-a207-127f508ece94")
-		(property "Reference" "C2"
-			(at 69.596 66.04 90)
+		(uuid "a78f04e4-0964-4048-974c-04a3ba695495")
+		(property "Reference" "C1"
+			(at 70.104 65.278 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3124,8 +3142,8 @@
 				)
 			)
 		)
-		(property "Value" "C_US"
-			(at 69.596 68.58 90)
+		(property "Value" "C_Polarized_US"
+			(at 70.104 67.056 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3135,7 +3153,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 69.85 73.66 0)
+			(at 69.85 71.12 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3146,7 +3164,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 69.85 73.66 0)
+			(at 69.85 71.12 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3156,8 +3174,8 @@
 				)
 			)
 		)
-		(property "Description" "capacitor, US symbol"
-			(at 69.85 73.66 0)
+		(property "Description" "Polarized capacitor, US symbol"
+			(at 69.85 71.12 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3168,15 +3186,15 @@
 			)
 		)
 		(pin "2"
-			(uuid "b5856bce-f9e6-4408-a883-9cdbb05b0dc8")
+			(uuid "4f6a8e4d-2957-44dd-9098-32ebbdbd097e")
 		)
 		(pin "1"
-			(uuid "dc9afce9-d762-4433-b4c3-5beffb4befe4")
+			(uuid "d71c4e6e-1651-4ff2-a52a-0aa5abb489dd")
 		)
 		(instances
 			(project "mcct"
 				(path "/c9b01fdd-e7fd-4266-a6f2-254c98b01aee/a8195a3a-c91e-4488-89bd-6f4977dcb558"
-					(reference "C2")
+					(reference "C1")
 					(unit 1)
 				)
 			)

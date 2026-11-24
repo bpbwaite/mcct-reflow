@@ -1,0 +1,4 @@
+(sym_lib_table
+	(version 7)
+	(lib (name "mcct-pcb-lib") (type "KiCad") (uri "${KIPRJMOD}/mcct-pcb-lib/mcct-pcb-lib.kicad_sym") (options "") (descr "Parts local to this project"))
+)

@@ -1849,7 +1849,7 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "glibri:5361BS"
+		(symbol "mcct-pcb-lib:5361BS"
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
@@ -1877,7 +1877,7 @@
 					(justify left)
 				)
 			)
-			(property "Footprint" ""
+			(property "Footprint" "mcct-pcb-lib:5361BS"
 				(at 0 -15.24 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -1922,7 +1922,7 @@
 					)
 				)
 			)
-			(property "ki_fp_filters" "D1X8K*"
+			(property "ki_fp_filters" "5361BS*"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -2648,7 +2648,7 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "glibri:MS51FB9AE"
+		(symbol "mcct-pcb-lib:MS51FB9AE"
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
@@ -5908,7 +5908,7 @@
 		)
 	)
 	(symbol
-		(lib_id "glibri:5361BS")
+		(lib_id "mcct-pcb-lib:5361BS")
 		(at 213.36 57.15 0)
 		(unit 1)
 		(body_style 1)
@@ -5938,7 +5938,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "mcct-pcb-lib:5361BS"
 			(at 213.36 72.39 0)
 			(hide yes)
 			(show_name no)
@@ -6652,7 +6652,7 @@
 		)
 	)
 	(symbol
-		(lib_id "glibri:MS51FB9AE")
+		(lib_id "mcct-pcb-lib:MS51FB9AE")
 		(at 95.25 77.47 0)
 		(unit 1)
 		(body_style 1)

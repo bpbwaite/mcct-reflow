@@ -947,7 +947,7 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "glibri:PW5V-500mA_V1.3"
+		(symbol "mcct-pcb-lib:PW5V-500mA_V1.3"
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
@@ -973,7 +973,7 @@
 					)
 				)
 			)
-			(property "Footprint" "Converter_ACDC:Converter_ACDC_PW5V_500_1_3"
+			(property "Footprint" ""
 				(at 0 -7.62 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -2853,7 +2853,7 @@
 		)
 	)
 	(symbol
-		(lib_id "glibri:PW5V-500mA_V1.3")
+		(lib_id "mcct-pcb-lib:PW5V-500mA_V1.3")
 		(at 200.66 88.9 0)
 		(unit 1)
 		(body_style 1)

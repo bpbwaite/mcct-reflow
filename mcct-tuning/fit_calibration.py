@@ -79,6 +79,15 @@ def equation(coef):
     return "T = " + " ".join(terms).lstrip("+")
 
 
+def firmware_coef():
+    """The calibration the firmware is built with: polyfit coefficients, mV -> degC."""
+    lines = FIRMWARE_CSV.read_text().splitlines()
+    degree = next(int(x.split("=")[1]) for x in lines if x.startswith("# degree"))
+    rows = [x.split(",") for x in lines if x and not x.startswith("#")][1:]
+    mv, temp = (np.array(c, dtype=float) for c in zip(*rows))
+    return np.polyfit(mv * 1000, temp, degree)
+
+
 def write_firmware_csv(mv, temp, degree, note, source="the cool-down table (fit_calibration.py)"):
     lines = [
         "# MCCT sensor calibration: pin 3 reading vs plate surface temperature.",
@@ -104,8 +113,8 @@ def main():
     ap.add_argument("--note", default="probe on the plate surface", help="provenance comment")
     args = ap.parse_args()
     if args.write:
-        raise SystemExit("--write is disabled: these tables are suspect (probe contact, see "
-                         "RECALIBRATION.md); use fit_plateaus.py on a new run")
+        raise SystemExit("--write is disabled: the probe in these tables had poor contact; "
+                         "use fit_plateaus.py")
 
     cool_path = HERE / "data" / "cal-cooldown.csv"
     warm_path = HERE / "data" / "cal-warmup.csv"

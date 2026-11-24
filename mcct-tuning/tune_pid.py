@@ -68,7 +68,8 @@ PLANTS = {                    # name: (C, loss, tau_h, power) multipliers
     "heavy":        (1.2, 1.0, 1.0, 1.0),
     "light":        (0.85, 1.0, 1.0, 1.0),
     "lossy":        (1.0, 1.25, 1.0, 1.0),
-    "slow heater":  (1.0, 1.0, 1.5, 1.0),
+    "insulated":    (1.0, 0.8, 1.0, 1.0),
+    "slow heater":  (1.0, 1.0, 3.0, 1.0),     # ~11 s in total: the lag was only inferred
     "low mains":    (1.0, 1.0, 1.0, 0.85),
 }
 
@@ -83,6 +84,7 @@ class Sim:
         self.k = m["k"] * lm
         self.r = m["r_e9"] * 1e-9 * lm
         self.tau_h = m["tau_h"] * tm
+        self.tau_2 = m["tau_2"] * tm
         self.P = m["P_heater_W"] * pm
         self.tau_p = m["tau_probe"]
         self.kp, self.ti, self.td = kp.astype(float), ti.astype(float), td.astype(float)
@@ -96,12 +98,14 @@ class Sim:
         self.ts = np.full(self.n, t0)
         self.probe = self.ts.copy()
         self.q = np.full(self.n, self.k * (t0 - AMBIENT))      # steady heat flow
+        self.h = self.q.copy()
 
     def plant_step(self, duty):
         ta4 = (AMBIENT + 273.15) ** 4
         loss = self.k * (self.ts - AMBIENT) + self.r * ((self.ts + 273.15) ** 4 - ta4)
         self.ts = self.ts + DT * (self.q - loss) / self.C
-        self.q = self.q + DT * (self.P * duty / DUTY_FULL - self.q) / self.tau_h
+        self.q = self.q + DT * (self.h - self.q) / self.tau_2
+        self.h = self.h + DT * (self.P * duty / DUTY_FULL - self.h) / self.tau_h
         self.probe = self.probe + DT * (self.ts - self.probe) / self.tau_p
 
     def pv_dc(self):

@@ -59,6 +59,9 @@ void test_pid(void)
     CHECK_EQ(pid_terms.integral_q8, 0);
 }
 
+/* Setpoint step per control period at headroom power, whole 0.1 degC. */
+#define RAMP_STEP_DC  (100L * CFG_RAMP_HEADROOM_PERCENT / CFG_MODEL_CAP_X10_DEFAULT / CONTROL_STEPS_PER_S)
+
 void test_controller(void)
 {
     static __xdata uint16_t i;
@@ -73,7 +76,7 @@ void test_controller(void)
     CHECK_EQ(ctrl_update(TEMP_DC(25)), 0);
 
     /* HOLD ramps the setpoint from the plate temperature at the modelled
-     * rate (~1 degC/s at room temperature with the defaults), never past
+     * rate (~2 degC/s at room temperature with the defaults), never past
      * the target */
     ctrl_hold(TEMP_DC(200));
     prev = ctrl_setpoint();
@@ -88,7 +91,7 @@ void test_controller(void)
         prev = sp;
     }
     CHECK_EQ(sp, TEMP_DC(200));
-    CHECK(biggest_step >= 2 && biggest_step <= 4);      /* 0.2 .. 0.4 degC per 250 ms */
+    CHECK(biggest_step >= RAMP_STEP_DC && biggest_step <= RAMP_STEP_DC + 1);
 
     /* lowering the target ramps down at the natural cooling rate */
     ctrl_hold(TEMP_DC(100));

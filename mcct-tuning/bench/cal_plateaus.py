@@ -26,7 +26,7 @@ import time
 RUNNING = 1
 STATES = ["idle", "holding", "stopped", "time limit", "mV ceiling", "sensor does not follow", "host lost"]
 STEADY_S, STEADY_BAND_MV = 120, 2.0
-STEP_MV, MIN_MV = 100, 700
+STEP_MV, MIN_MV, MAX_MV = 100, 700, 1800
 
 
 class Link:
@@ -35,6 +35,7 @@ class Link:
     def __init__(self, ser, log):
         self.ser, self.log = ser, log
         self.window = collections.deque(maxlen=STEADY_S * 4)    # 250 ms per line
+        self.prev = None                    # (set_mv, state) of the line before
         self.last = None                    # (mv, set_mv, duty_pct, state)
         self.last_time = 0.0
         self.alive, self.keepalive = True, False
@@ -69,6 +70,13 @@ class Link:
         # Reject garbled lines: the two readings must agree, the rest be legal.
         if abs(q16 * 50000 / 65536 - mv10) > 3 or not 0 <= state < len(STATES) or not 0 <= duty <= 10000:
             return
+        if set_mv % STEP_MV or not MIN_MV <= set_mv <= MAX_MV or (state != RUNNING and duty):
+            return
+        # A single flipped character can still look legal: believe the target
+        # and state only when two lines in a row agree.
+        prev, self.prev = self.prev, (set_mv, state)
+        if prev != self.prev:
+            return
         self.last, self.last_time = (mv10 / 10, set_mv, duty / 100, state), time.time()
         self.window.append((mv10 / 10, duty / 100))
 
@@ -87,11 +95,13 @@ class Link:
 def stop(link):
     link.keepalive = False
     for _ in range(5):
+        sent = time.time()
         try:
             link.send("x")
+            time.sleep(0.8)                 # two agreeing lines
         except Exception:
             break
-        if link.fresh() and link.last[3] != RUNNING:
+        if link.fresh() and link.last_time > sent and link.last[3] != RUNNING:
             print(f"Chip confirms heater off ({STATES[link.last[3]]}).")
             return True
     print("*** HEATER OFF NOT CONFIRMED: use the power switch ***")
@@ -105,20 +115,27 @@ def set_target(link, target):
             raise RuntimeError("no telemetry")
         now = link.last[1]
         if now == target:
-            return
+            time.sleep(1.2)                 # a key may still be on its way
+            if link.fresh() and link.last[1] == target:
+                return
+            continue
         link.send("+" if now < target else "-")
-        time.sleep(0.4)
+        time.sleep(1.2)                     # two agreeing lines take up to 0.75 s
     raise RuntimeError(f"target stuck at {link.last[1]} mV")
 
 
-def check_running(link):
+def check_running(link, target, max_mv):
     if not link.fresh():
         raise RuntimeError("no telemetry")
     if link.last[3] != RUNNING:
         raise RuntimeError(f"chip stopped the hold: {STATES[link.last[3]]}")
+    if link.last[1] != target:
+        raise RuntimeError(f"target is {link.last[1]} mV, expected {target}")
+    if link.last[0] >= max_mv:
+        raise RuntimeError(f"reading {link.last[0]:.1f} mV reached --max-mv")
 
 
-def run(link, targets, max_probe, out, ask):
+def run(link, targets, max_probe, out, ask, max_mv=MAX_MV + STEP_MV):
     """ask(prompt) starts a prompt and returns a queue its answer arrives on."""
     started = False
     for target in targets:
@@ -133,14 +150,14 @@ def run(link, targets, max_probe, out, ask):
         print(f"\n== {target} mV: waiting for the sensor to settle")
         shown = 0
         while not link.steady():
-            check_running(link)
+            check_running(link, target, max_mv)
             if time.time() - shown > 15:
                 shown = time.time()
                 print(f"   {link.last[0]:7.1f} mV  duty {link.last[2]:4.1f} %")
             time.sleep(0.2)
         answers = ask("Sensor steady. Probe steady too? Type its degC (s skip, q quit): ")
         while True:
-            check_running(link)
+            check_running(link, target, max_mv)
             try:
                 text = answers.get(timeout=0.2)
                 break
@@ -187,16 +204,17 @@ def main():
     ap.add_argument("out")
     ap.add_argument("--mv", nargs="+", type=int, default=list(range(700, 1801, 100)))
     ap.add_argument("--max-probe", type=float, default=240.0)
+    ap.add_argument("--max-mv", type=float, default=MAX_MV + STEP_MV, help="stop the run at this reading")
     args = ap.parse_args()
-    if any(m % STEP_MV or m < MIN_MV for m in args.mv):
-        sys.exit(f"targets must be multiples of {STEP_MV} from {MIN_MV}")
+    if any(m % STEP_MV or not MIN_MV <= m <= MAX_MV for m in args.mv):
+        sys.exit(f"targets must be multiples of {STEP_MV} from {MIN_MV} to {MAX_MV}")
     import serial
     with open(args.out, "x") as out, open(args.out + ".log", "x") as log:      # never overwrite data
         out.write("mv,probe_c,mv_std,duty_pct\n")
         link = Link(serial.Serial(args.port, 115200, timeout=0.1), log)
         try:
             time.sleep(4)                   # Uno bootloader + chip boot
-            run(link, args.mv, args.max_probe, out, ask_stdin)
+            run(link, args.mv, args.max_probe, out, ask_stdin, args.max_mv)
         except KeyboardInterrupt:
             print("\ninterrupted")
         except Exception as e:

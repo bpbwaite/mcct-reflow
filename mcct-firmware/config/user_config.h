@@ -64,22 +64,24 @@
  * Kp in tenths of a percent of full power per degC, Ti and Td in seconds.
  * Ti = 0 disables the integral term. */
 /* Tuned offline (mcct-tuning/tune_pid.py) against the plate model fitted to
- * the 2026-11-22 calibration run, and checked against plates 15-50 % off. */
+ * the 2026-11-22/23 runs, and checked against plates 15-25 % off and lags up
+ * to ~11 s. */
 #define CFG_PID_KP_X10_DEFAULT          30      /* 3.0 %/degC */
 #define CFG_PID_TI_S_DEFAULT            800
-#define CFG_PID_TD_S_DEFAULT            12
+#define CFG_PID_TD_S_DEFAULT            8
 #define CFG_PID_I_ERROR_CLAMP_C         50      /* integrate at most this error */
 #define CFG_PID_D_FILTER_SHIFT          3       /* derivative input low-pass, alpha = 1/2^n */
 /* Thermal model defaults (replaced by the auto-tuner's measurements):
  *   holding power = LOSS * (T - ambient),  LOSS in thousandths of %/degC
  *   ramping power = CAP * dT/dt,           CAP in tenths of %*s/degC
- * Measured (mcct-tuning/plate_model.py): 184 J/K, losses 21 W at 100 degC
- * and 79 W at 250 degC (convection + radiation) for the 350 W heater; LOSS
+ * Fitted (mcct-tuning/plate_model.py): 152 J/K, losses 15 W at 100 degC
+ * and 55 W at 250 degC (convection + radiation) for the 350 W heater; LOSS
  * is the best straight line over 100..250 degC. */
-#define CFG_MODEL_LOSS_X1000_DEFAULT    90
-#define CFG_MODEL_CAP_X10_DEFAULT       526
+#define CFG_MODEL_LOSS_X1000_DEFAULT    64
+#define CFG_MODEL_CAP_X10_DEFAULT       434
 /* The heater element's heat reaches the plate with this time constant
- * (measured 11.4 s). Reflow ramps stop their feed-forward this long before
+ * (never measured directly: about 4 s inferred from logged plateau steps, 11 s
+ * from the first fit; the longer one overshoots least). Reflow ramps stop their feed-forward this long before
  * the ramp ends, so the heat still in the element finishes the ramp instead
  * of overshooting the waypoint. */
 #define CFG_MODEL_LAG_S                 11
@@ -148,8 +150,7 @@
 #define CFG_PLANT_SIM                   0
 #endif
 /* Calibration firmware (build.ps1 -Cal, src/cal/): holds a sensor voltage.
- * The ceiling is raw mV, chosen low while the temperature scale is in doubt:
- * if the plate was really 290 degC at 2050 mV, 1850 mV is roughly 250 degC. */
+ * The ceiling is raw mV; 1850 mV is about 267 degC. */
 #define CFG_CAL_MIN_MV                  700
 #define CFG_CAL_MAX_MV                  1800    /* highest selectable hold */
 #define CFG_CAL_CEILING_MV              1850    /* heater off at or above this */

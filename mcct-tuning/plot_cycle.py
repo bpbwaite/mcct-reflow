@@ -54,8 +54,8 @@ def main():
     warm = read_rows(HERE / "data" / "cal-warmup.csv")
     cool = read_rows(HERE / "data" / "cal-cooldown.csv")
 
-    in_fit = cool[1] <= cal.FIT_MAX_C
-    degree, coef, _ = cal.fit(cool[0][in_fit], cool[1][in_fit], 0.1)
+    coef = cal.firmware_coef()
+    degree = coef.size - 1
 
     mv = np.r_[warm[0], cool[0]]
     probe = np.r_[warm[1], cool[1]]

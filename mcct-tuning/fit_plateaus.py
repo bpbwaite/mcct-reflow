@@ -5,7 +5,8 @@ Usage: ..\\tools\\venv\\Scripts\\python.exe fit_plateaus.py data/<run>.csv [more
 Degree (1..3) is chosen by leave-one-out error: the lowest degree within 10 %
 of the best. Plateaus visited twice show repeatability (a shifted probe).
 --write is refused for too few points, poor repeatability, a non-rising
-curve, or a worst residual above --max-resid. Plot: out/plateaus.png
+curve, or a residual or repeat above --max-resid; above --notice it only prints
+a notice. Plot: out/plateaus.png
 """
 import argparse
 import csv
@@ -32,7 +33,8 @@ def main():
     ap.add_argument("runs", nargs="+")
     ap.add_argument("--write", action="store_true")
     ap.add_argument("--note", default="plateau run")
-    ap.add_argument("--max-resid", type=float, default=2.0, help="degC")
+    ap.add_argument("--max-resid", type=float, default=3.0, help="degC, refuse to write above")
+    ap.add_argument("--notice", type=float, default=2.0, help="degC, print a notice above")
     args = ap.parse_args()
 
     rows = [r for path in args.runs for r in csv.DictReader(open(path, newline=""))]
@@ -61,6 +63,10 @@ def main():
                 print(f"repeat at {mv[i]:.0f} mV: {t[j]:.1f} / {t[i]:.1f} degC ({gap:.1f} apart)")
     print(f"valid for {mv.min():.0f}..{mv.max():.0f} mV = {t.min():.0f}..{t.max():.0f} degC; "
           f"readings beyond that are extrapolated")
+
+    for what, value in (("worst residual", np.abs(resid).max()), ("repeat difference", spread)):
+        if value > args.notice:
+            print(f"NOTICE: {what} {value:.1f} degC is above {args.notice:g} degC")
 
     fig, (ax, axr) = plt.subplots(2, 1, figsize=(9, 8), sharex=True, gridspec_kw={"height_ratios": [3, 1]})
     ax.plot(mv, t, "o", label="plateaus")

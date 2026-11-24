@@ -1,7 +1,7 @@
 r"""Exercise the nuvo51icp bridge's passthrough <-> ISP switching without a target chip.
 
 Usage (from tools\): venv\Scripts\python.exe -I bridge_test.py [COM8]
-Assumes no target is attached. See tools/AGENTS.md.
+Assumes no target is attached. See AGENTS.md.
 """
 import sys
 import time

@@ -5,7 +5,7 @@
 #define W(s) SECONDS_TO_STEPS(s)
 #define FULL ((duty_t)CFG_CAL_MAX_DUTY_PERCENT * 100)
 
-/* Lagged plate in 0.001 mV: ~0.137 mV/s per % (suspect model, 7 mV/degC),
+/* Lagged plate in 0.001 mV: ~0.137 mV/s per % (early model, 7 mV/degC),
  * 11 s heater lag, 600 s loss time constant. */
 static __xdata int32_t mv3, q;
 

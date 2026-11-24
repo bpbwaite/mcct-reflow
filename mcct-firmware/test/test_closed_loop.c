@@ -132,10 +132,10 @@ void test_autotune(void)
     report("loss x1000: ", settings.loss_x1000);
     report("cap x10: ", settings.cap_x10);
 
-    /* The simulated plate: 0.32 W/K loss and 185 J/K (plate + element) at
-     * 3.5 W per % -> loss 0.091 %/degC, capacity ~53 %*s/degC. */
-    CHECK_NEAR(settings.loss_x1000, 91, 18);
-    CHECK_NEAR(settings.cap_x10, 530, 160);
+    /* The simulated plate: 0.22 W/K loss and 152 J/K (plate + element) at
+     * 3.5 W per % -> loss 0.063 %/degC, capacity ~43 %*s/degC. */
+    CHECK_NEAR(settings.loss_x1000, 63, 13);
+    CHECK_NEAR(settings.cap_x10, 434, 130);
     CHECK(settings.kp_x10 >= 20 && settings.kp_x10 <= 900);
     CHECK(settings.ti_s >= 5 && settings.ti_s <= 600);
 

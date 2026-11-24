@@ -1645,30 +1645,6 @@
 		)
 		(uuid "e2fff466-c0d9-4175-bb29-13be46668809")
 	)
-	(global_label "SEG_E"
-		(shape input)
-		(at 46.99 81.28 90)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "4c42cb3a-1009-4d51-8cee-64cccd39388a")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 46.99 72.5497 90)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-	)
 	(global_label "MCU_ICP_CLK"
 		(shape input)
 		(at 29.21 82.55 90)
@@ -1693,7 +1669,7 @@
 			)
 		)
 	)
-	(global_label "SEG_A"
+	(global_label "EXT_1"
 		(shape input)
 		(at 44.45 81.28 90)
 		(fields_autoplaced yes)
@@ -1703,9 +1679,9 @@
 			)
 			(justify left)
 		)
-		(uuid "94f1cccb-5859-40a2-a121-829d1aea20ab")
+		(uuid "91fe1994-97d6-4c9b-807a-fc461ba25006")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 44.45 72.6101 90)
+			(at 44.45 72.7916 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1730,6 +1706,30 @@
 		(uuid "9ea7987b-fdc8-45ba-8bfc-00ac36b9d5fe")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 24.13 68.0743 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+	)
+	(global_label "EXT_2"
+		(shape input)
+		(at 46.99 81.28 90)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "aeb16517-611c-441c-bf0b-15cd495c2637")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 46.99 72.7916 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)

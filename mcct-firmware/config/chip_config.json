@@ -2,7 +2,7 @@
     "_comment": [
         "MS51 CONFIG bytes, written by mcct.py flash (nuvoispy -c). Chip options only;",
         "every firmware option is in user_config.h.",
-        "lock: true makes the flash unreadable over ICP (a later flash mass-erases it). Set it for production.",
+        "lock: true makes the flash unreadable over ICP (a later flash mass-erases it).",
         "WDT_enable: hardware watchdog as a reset timer that software cannot disable. The firmware",
         "  refuses to run without it (CFG_REQUIRE_HW_WATCHDOG). WDT_keep_active: false = it pauses",
         "  in idle/power-down (the firmware never sleeps).",

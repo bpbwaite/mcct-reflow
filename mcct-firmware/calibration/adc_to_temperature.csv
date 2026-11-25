@@ -1,9 +1,9 @@
-# MCCT sensor calibration: pin 3 reading vs plate surface temperature.
+# MCCT sensor calibration: ADC reading vs plate surface temperature.
 #
-# Generated in mcct-tuning from the plateau table (fit_plateaus.py):
-# 2026-11-23 plateau runs 1, 1b and 2, new probe. voltage_v is the firmware's
-# display value: the ADC fraction of VDD times a nominal 5.000 V, so
-# vdd_v stays 5.0 whatever the real rail measures.
+# Display value: the ADC fraction of VDD times a nominal 5.000 V, so
+# vdd_v stays 5.0, regardless of what the rail really measures.
+#
+# Replace with your actual measured values!
 #
 # vdd_v = 5.0
 # degree = 1

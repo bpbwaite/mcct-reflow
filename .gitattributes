@@ -2,6 +2,3 @@
 *.patch -text
 # Serial logs as recorded (mixed line endings, garbled bytes)
 *.log -text
-# Laptop (Linux) scripts
-*.sh text eol=lf
-mcct-tuning/bench/nuvoispy text eol=lf

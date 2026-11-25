@@ -2,7 +2,9 @@
 
 Everything agent-facing for this repo is in this file; README.md is the
 human-facing guide (use, installation, flashing). Don't add other
-agent or readme files; put things here or there, once.
+agent or readme files.
+
+Don't edit the readme, but DO suggest additions when new features are added or todo-list items are completed.
 
 Paths in Firmware and Design decisions are relative to `mcct-firmware/`, in
 Programmer tools to `tools/` and in Tuning to `mcct-tuning/`, unless they start
@@ -26,9 +28,8 @@ with a top-level folder. Commands run from the repo root if they name one.
   it ever needs changes, keep them as `tools/ms51-bsp-local.patch` (exported
   with `git -C tools/MS51_BSP diff`) and list them here, the same way the
   bridge's patch works (see Programmer tools). The firmware only uses the
-  BSP headers (SFR names); no BSP functions are linked any more.
-- SDCC 4.6.0 lives in `tools/sdcc` (extracted from the official NSIS installer
-  with 7-Zip, so it is not on PATH and not in the registry). `bin/cc1` had to be
+  BSP headers (SFR names); no BSP functions are linked.
+- SDCC 4.6.0 lives in `tools/sdcc` (it is not on PATH and not in the registry). `bin/cc1` had to be
   renamed `cc1.exe`, and `sdcpp` only finds it via PATH, so `build.ps1`
   prepends `tools/sdcc/bin` to PATH for its own process.
 - Nuvoton headers test `__SDCC__`, which SDCC doesn't define (it uses `__SDCC`):
@@ -89,7 +90,6 @@ with a top-level folder. Commands run from the repo root if they name one.
   ADC_CH2 (BSP names AINx by ADC channel, not package pin).
 - ICP / debug console share pins: pin 8 P1.6 = ICPDA = UART1_TXD (Uno D11),
   pin 18 P0.2 = ICPCK = UART1_RXD (Uno D12), pin 4 P2.0 = nRESET (Uno D13).
-  Reset pin is enabled, so ICP entry via the bridge needs no power cycle.
 - Segment cathodes are quasi-bidirectional (buttons share F/B), anodes and
   the heater push-pull. Pins are input-only from reset until `board_init()`.
 - CONFIG as flashed: `FF FF DF FF 5F` (unlocked, reset pin on, BOD 3.7 V reset
@@ -97,14 +97,12 @@ with a top-level folder. Commands run from the repo root if they name one.
 - Sensor: thermocouple + cold-junction-compensated amplifier, powered from
   the MCU's (isolated) 5 V supply. Room temperature reads well under 1 V,
   so there is no low-rail fault (CFG_SENSOR_MIN_PERMILLE 0).
-- **Ground loop (2026-11-22):** with the Uno's GND tied to the board (PC
-  earth), pin 3 read ~1.71 V +/-45 mV at 23 degC; without it, a few hundred
-  mV. Don't trust sensor readings taken with the bridge grounded to the
+- Don't trust sensor readings taken with the bridge grounded to the
   plate; use an isolated link (USB isolator / battery laptop) or none.
 - Sensor calibration firmware: `./build.ps1 -Cal` (src/cal/): holds a sensor
   voltage, no temperature logic; tests `-Cal -Test` (own image: the main one
   has no internal RAM left). Procedure: Tuning, Calibration run.
-  Hardware checks 2026-11-23: ENTER and Ctrl-C stop the hold, and a frozen
+  Hardware checks: ENTER and Ctrl-C stop the hold, and a frozen
   runner trips the host-lost timeout.
 - Unplugging the Uno's USB pulls D13 (nRESET) low: the chip resets, the display
   goes dark and the board's pull-down turns the heater off (owner-checked).
@@ -115,7 +113,7 @@ with a top-level folder. Commands run from the repo root if they name one.
 ## Debug console (src/debug)
 - UART1 at `CFG_CONSOLE_BAUD` (38400) = `PASSTHROUGH_BAUD` in the bridge.
   Above ~57600 the Uno's SoftwareSerial can't reliably receive.
-- Keys `u d e E` press UP/DOWN/ENTER/long ENTER, `t` telemetry, `s` settings;
+- Keys `u d e E` press UP/DOWN/ENTER/SET, `t` telemetry, `s` settings;
   bench builds only: `S` simulated plate, `W` hang. Full list and telemetry
   columns: `src/debug/cli.h`.
 - `scripts/hil.py` scripts and logs a session:
@@ -193,7 +191,7 @@ Each says where to change it.
 ## Hardware
 
 1. **Package pins map to these MS51FB9AE ports** (TSSOP-20 datasheet):
-   1 P0.5, 2 P0.6, 3 P0.7, 5 P3.0, 6 P1.7, 10 P1.5, 11 P1.4, 13 P1.2, 14 P1.1,
+   1 P0.5, 2 P0.6, 3 P0.7, 5 P3.0, 6 P1.7, 10 P1.5, 11 P1.4, 12 P1.3, 13 P1.2, 14 P1.1,
    15 P1.0, 16 P0.0, 17 P0.1, 19 P0.3, 20 P0.4. All in `src/board/pins.h`.
 2. **The display is driven one segment at a time, not one digit at a time.**
    The resistors are on the anodes, so lighting one segment across up to three
@@ -218,15 +216,8 @@ Each says where to change it.
 
 ## Sensor and calibration
 
-7. **Calibration from the 2026-11-23 plateau runs**
-   (`calibration/adc_to_temperature.csv`, made by `mcct-tuning/fit_plateaus.py`):
-   15 steady sensor readings, 699-1760 mV, each paired with a new probe on the
-   plate (33-249 degC). Above that it is extrapolated, the 280 degC fault
-   included. Repeats on the way down read 0.6-2.3 degC higher. Writing is
-   allowed up to 3 degC, with a notice above 2 degC (owner). Readings are
-   ratiometric, so the CSV keeps a nominal `vdd_v = 5.0` (the rail measures
-   5.04 V). The first calibration (2026-11-22 video, poor probe contact)
-   read about 55 degC low at 1700 mV.
+7. **Calibration**
+   Readings are ratiometric, so the CSV keeps a nominal `vdd_v = 5.0`.
 8. **Sensor fault only near the top rail** (99.5 % of VDD); see 16b for why
    there is no low-rail fault.
 9. **Straight line (degree 1)**, T = 0.2038 * mV - 110.0: rms 1.0 degC,
@@ -304,15 +295,18 @@ Each says where to change it.
 
 ## User interface
 
-20. **"Set" is a long press (1 s) of ENTER.** Short ENTER starts/stops heating.
-    In the menu: UP/DOWN browse, ENTER opens/confirms, long ENTER goes back;
-    the menu closes itself after 20 s.
+20. **SET (pin 12, P1.3) opens the menu and goes back.**
+    Holding ENTER for 1 s can do the same: `CFG_ENTER_HOLD_IS_SET`, off by
+    default (owner). Otherwise ENTER acts on release, however long it was held.
+    ENTER starts/stops heating. In the menu: UP/DOWN browse, ENTER opens/confirms; the menu closes itself
+    after 20 s.
 21. **Menu labels:** `rFL` reflow (choose a profile by its label, ENTER starts
     it), `tun` auto-tune (choose the temperature), `P` `I` `d` PID values
     (editable, not just viewable), `OFS` offset (+/- 25 degC), `rSt` factory
     reset (`no`/`yES`).
-22. **While heating, UP/DOWN show the target flashing for 2 s**, then the
-    plate temperature again.
+22. **After UP/DOWN the target shows solid for 2 s** (`CFG_PREVIEW_MS`);
+    then standby flashes it again, and heating shows the plate
+    temperature again.
 23. **The setting changes are saved 3 s after the last change** (wear-levelled
     over 16 slots in 2 flash pages). **Flashing new firmware erases the
     settings** (defaults load).
@@ -370,8 +364,7 @@ used unmodified by the firmware (see Toolchain).
   is D13 = nRESET, and upstream's `enable_connect_led()` right after ICP entry
   drove reset high, kicking the target out of ICP. Symptom: nuvoispy "Connected!"
   then "Device not found" (device ID 0) on every attempt, even with reset
-  enabled. Fixed 2026-11-21; the first real chip then read and flashed fine
-  with no power cycle.
+  enabled. Fixed.
 - **Boot reset pulse**: `setup()` holds nRESET low 20 ms then starts
   passthrough, so the target restarts once the bridge is listening (otherwise
   its boot banner is printed while the Uno is still in its bootloader).
@@ -455,43 +448,14 @@ Plots go to `out/` (not tracked).
 | `analyze_holds.py` | `logs/*.log` | Scores a closed-loop hold run (rise, overshoot, settling, steady error, duty vs model). |
 | `telemetry.py` | | Reads the firmware's console telemetry from a `hil.py` log. |
 
-## Data
-
-- `data/cal-warmup.csv`, `data/cal-cooldown.csv`: the 2026-11-22 video
-  calibration run, read off the video by the owner (`time_s` from each
-  table's start, `display` as shown, `probe_c` from a probe on the plate
-  surface). Full power for 3 min 5 s, then 39 min 4 s of cooling.
-  Use the sensor mV and timing only: the probe had poor contact.
-- `data/plateaus-*.csv`: the 2026-11-23 plateau runs (1, 1b going up, 2 the top
-  point and repeats); `.csv.log` is the full telemetry.
-- `logs/`: `hil.py` logs from the bench (telemetry on, key `t`). In the
-  2026-11-22 ones `pv` is on the first calibration; `mv` and `duty` are still
-  good. `cal-boot`, `check-*` (Ctrl-C and host-lost shutoffs) and `product-*` are
-  the 2026-11-23 bring-up.
-
 ## Bench runs
 
 Sensor readings are only valid with the bridge on the battery laptop (the
 desktop's USB ground corrupts them; see Hardware).
-Runs go in the laptop's tmux session `mcct` so they show on its screen.
-
-## Laptop setup
-
-The bench laptop (`user@laptop`, Linux) keeps nothing that isn't here. To
-recreate `~/bench` (the Uno is at `/dev/ttyACM0`):
-- `python -m venv venv`, then `venv/bin/pip install pyserial`.
-- Copy the contents of `bench/` (`nuvoispy`, `stubs/`, `cal_plateaus.py`),
-  `mcct-firmware/scripts/hil.py` and `tools/NuMicro-8051-prog/nuvoprogpy/`;
-  `mkdir fw logs`; `chmod +x nuvoispy`.
-- `stubs/zmq` stands in for pyzmq, which won't load on Linux and is unused.
-- The login shell is zsh: use `sh -c` for globs.
-- Only use firmware images built on or after 2026-11-23: older ones carry the
-  first calibration (about 55 degC low at 1700 mV).
 
 ## Calibration run
 
-Heater (mains) power off while flashing; laptop on battery
-(`/sys/class/power_supply/AC/online` = 0), lid open. From `mcct-firmware`:
+Heater (mains) power off while flashing; laptop on battery. From `mcct-firmware`:
 `.\build.ps1 -Cal -Test`, `.\build.ps1 -Cal`, then scp `build/mcct-cal.bin` and
 `config/chip_config.json` to `user@laptop:mcct/fw/` and
 `mcct-tuning/bench/cal_plateaus.py` to `mcct/`. On the laptop:

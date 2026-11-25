@@ -3,7 +3,7 @@ tools/__pycache__/
 tools/_downloads/
 # Downloaded / generated toolchains (see README.md)
 tools/sdcc/
-tools/venv/
+.venv/
 tools/arduino-cli/
 
 # icp_probe build inputs copied from the NuMicro-8051-prog submodule by bridge.ps1 -Probe

@@ -1,6 +1,6 @@
-"""Plateau calibration run (laptop side), for the -Cal firmware.
+"""Plateau calibration run (PC side), for the -Cal firmware.
 
-Usage: python cal_plateaus.py <port> <out.csv> [--mv 700 800 ...] [--max-probe 240]
+Usage: uv run cal_plateaus.py <port> <out.csv> [--mv 700 800 ...] [--max-probe <degC>]
 
 Steps the plate through sensor-voltage holds. At each one it waits until the
 sensor is steady, then asks for the probe reading; wait until the probe is
@@ -17,7 +17,9 @@ Results: <out.csv> (mv, probe_c, mv_std, duty_pct), all telemetry: <out>.log
 """
 import argparse
 import collections
+import pathlib
 import queue
+import re
 import statistics
 import sys
 import threading
@@ -26,7 +28,19 @@ import time
 RUNNING = 1
 STATES = ["idle", "holding", "stopped", "time limit", "mV ceiling", "sensor does not follow", "host lost"]
 STEADY_S, STEADY_BAND_MV = 120, 2.0
-STEP_MV, MIN_MV, MAX_MV = 100, 700, 1800
+USER_CONFIG = pathlib.Path(__file__).resolve().parent.parent / "mcct-firmware" / "config" / "user_config.h"
+
+
+def config(name):
+    """An integer option from the firmware's user_config.h."""
+    m = re.search(rf"^#define\s+{name}\s+(\d+)", USER_CONFIG.read_text(encoding="utf-8"), re.M)
+    if not m:
+        sys.exit(f"{name} not found in {USER_CONFIG}")
+    return int(m.group(1))
+
+
+STEP_MV, MIN_MV, MAX_MV = config("CFG_CAL_STEP_MV"), config("CFG_CAL_MIN_MV"), config("CFG_CAL_MAX_MV")
+MAX_PROBE_C = config("CFG_TARGET_MAX_C") - 10       # end the run a little below the plate's limit
 
 
 class Link:
@@ -202,13 +216,14 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("port")
     ap.add_argument("out")
-    ap.add_argument("--mv", nargs="+", type=int, default=list(range(700, 1801, 100)))
-    ap.add_argument("--max-probe", type=float, default=240.0)
+    ap.add_argument("--mv", nargs="+", type=int, default=list(range(MIN_MV, MAX_MV + 1, STEP_MV)))
+    ap.add_argument("--max-probe", type=float, default=MAX_PROBE_C)
     ap.add_argument("--max-mv", type=float, default=MAX_MV + STEP_MV, help="stop the run at this reading")
     args = ap.parse_args()
     if any(m % STEP_MV or not MIN_MV <= m <= MAX_MV for m in args.mv):
         sys.exit(f"targets must be multiples of {STEP_MV} from {MIN_MV} to {MAX_MV}")
     import serial
+    pathlib.Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     with open(args.out, "x") as out, open(args.out + ".log", "x") as log:      # never overwrite data
         out.write("mv,probe_c,mv_std,duty_pct\n")
         link = Link(serial.Serial(args.port, 115200, timeout=0.1), log)

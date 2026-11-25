@@ -216,10 +216,29 @@ index 3ff8365..08c6b41 100644
    }
  #if CONNECTION_TIMEOUT
    else { // serial has no characters
+diff --git a/nuvoprogpy/config.py b/nuvoprogpy/config.py
+index 2ef7bf7..5b3270a 100644
+--- a/nuvoprogpy/config.py
++++ b/nuvoprogpy/config.py
+@@ -1,4 +1,4 @@
+-from curses import flash
++# LOCAL PATCH: removed the unused curses import (not available on Windows)
+ import json
+ import struct
+ import ctypes
 diff --git a/nuvoprogpy/nuvoispy/nuvoispy.py b/nuvoprogpy/nuvoispy/nuvoispy.py
-index 83f5f3f..845517f 100644
+index 83f5f3f..5cb7eaf 100644
 --- a/nuvoprogpy/nuvoispy/nuvoispy.py
 +++ b/nuvoprogpy/nuvoispy/nuvoispy.py
+@@ -36,7 +36,7 @@ import serial
+ import time
+ import math
+ 
+-from zmq import device
++# LOCAL PATCH: removed the unused zmq import (needed pyzmq)
+ 
+ try:
+     from ..nuvoprog import NuvoProg
 @@ -469,8 +469,11 @@ class NuvoISP(NuvoProg):
          connect_retries = 0
          send_retries = 0

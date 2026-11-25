@@ -1,0 +1,12 @@
+[project]
+name = "mcct"
+version = "0.1.0"
+description = "Build, flash and calibration tools for the MCCT hot plate firmware"
+requires-python = ">=3.10"
+dependencies = ["pyserial"]
+
+[dependency-groups]
+tuning = ["numpy", "matplotlib"]
+
+[tool.uv]
+package = false

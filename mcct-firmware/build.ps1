@@ -31,7 +31,8 @@ $Root    = $PSScriptRoot
 $Tools   = Join-Path $Root '..\tools' | Resolve-Path
 $SdccBin = Join-Path $Tools 'sdcc\bin'
 $Isp     = Join-Path $Tools 'nuvoispy.ps1'
-$Python  = Join-Path $Tools 'venv\Scripts\python.exe'
+# Python runs through uv, in the environment of the repo's pyproject.toml.
+$UvRun   = @('run', '--project', (Join-Path $Root '..' | Resolve-Path).Path, 'python')
 # The bridge's USB side always runs at 115200; it converts to the target's
 # console baud (CFG_CONSOLE_BAUD / PASSTHROUGH_BAUD, 38400) itself.
 $BridgeBaud = 115200
@@ -48,6 +49,7 @@ $Scripts    = Join-Path $Root 'scripts'
 # Nuvoton MS51 BSP (tools/MS51_BSP submodule, unmodified): only its headers
 # (SFR names) are used; the firmware has its own drivers.
 $BspDir  = Join-Path $Tools 'MS51_BSP\MS51FB9AE_MS51XB9AE_MS51XB9BE\Library'
+if (-not (Get-Command uv -ErrorAction SilentlyContinue)) { throw 'uv not found (https://docs.astral.sh/uv/)' }
 if (-not (Test-Path $BspDir)) { throw "MS51 BSP not found at $BspDir (run: git submodule update --init)" }
 $OutDir  = Join-Path $Root 'build'
 $GenDir  = Join-Path $OutDir 'generated'
@@ -93,7 +95,7 @@ function Invoke-Tool([string]$exe, [string[]]$toolArgs) {
 
 function Invoke-Python([string[]]$pyArgs) {
     $ErrorActionPreference = 'Continue'
-    & $Python -I @pyArgs 2>&1 | ForEach-Object { Write-Host "$_" }
+    & uv @UvRun -I @pyArgs 2>&1 | ForEach-Object { Write-Host "$_" }
     $code = $LASTEXITCODE
     $ErrorActionPreference = 'Stop'
     if ($code -ne 0) { throw "code generation failed (exit $code)" }
@@ -144,7 +146,7 @@ function Start-Monitor {
     # Opening the port resets the Uno, whose bootloader pulses D13 = nRESET,
     # so the target restarts and you see its output from the beginning.
     Write-Host "Console on $Port (bridge passthrough). Ctrl+] to quit."
-    & $Python -m serial.tools.miniterm --eol LF --quiet $Port $BridgeBaud
+    & uv @UvRun -m serial.tools.miniterm --eol LF --quiet $Port $BridgeBaud
 }
 
 if ($Status) { Invoke-Isp @('-p', $Port, '-u'); return }

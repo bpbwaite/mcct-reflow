@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# Regenerate the schematic PDF when a schematic sheet is part of the commit.
+git diff --cached --quiet -- 'mcct-pcb/*.kicad_sch' && exit 0
+# The export reads files on disk, so they must match what is being committed.
+if ! git diff --quiet -- 'mcct-pcb/*.kicad_sch'; then
+    echo "pre-commit: unstaged schematic changes; stage or stash them first" >&2
+    exit 1
+fi
+# PATH first, then the default Windows install (newest version).
+cli=$(command -v kicad-cli || ls -d "/c/Program Files/KiCad/"*/bin/kicad-cli.exe 2>/dev/null | sort -V | tail -n 1)
+if [ -z "$cli" ]; then
+    echo "pre-commit: kicad-cli not found, schematic.pdf not updated" >&2
+    exit 0
+fi
+# Page 1 is the root sheet. Add new sheets' page numbers here.
+"$cli" sch export pdf --pages 2,3,4,5 -o mcct-pcb/schematic.pdf mcct-pcb/mcct.kicad_sch || exit 1
+git add mcct-pcb/schematic.pdf

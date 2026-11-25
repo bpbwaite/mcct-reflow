@@ -2,3 +2,5 @@
 *.patch -text
 # Serial logs as recorded (mixed line endings, garbled bytes)
 *.log -text
+# Shell scripts must keep LF to run on Linux
+.githooks/* text eol=lf

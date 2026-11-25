@@ -76,7 +76,7 @@ def main():
     ax.legend(fontsize=8)
     axr.axhline(0, color="k", lw=0.8)
     axr.plot(mv, resid, "o")
-    axr.set_ylabel("Probe − fit (°C)")
+    axr.set_ylabel("Probe - fit (°C)")
     axr.set_xlabel("Sensor reading (mV of a nominal 5.0 V)")
     for a in (ax, axr):
         a.grid(alpha=0.3)

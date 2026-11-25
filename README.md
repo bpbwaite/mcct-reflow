@@ -12,23 +12,18 @@ An open alternative firmware for generic "MicroComputer Constant Temperature"-st
 
 ## Features
 
-Ported from the original firmware:
-- Automatic and manual PID tuning
-- Manual temperature offset
-- Overtemperature shutdown
-- Last config saved to flash
-
-New:
-- Improved menu
-- Automatic shutdown
-- Customizable reflow curves for Sn63Pb37, SAC305, and Sn42Bi58 pastes
-- Fully configurable before compilation
-- Optional calibration routine (requires external probe)
-
-Planned (TODO):
-- Checksum for serial communications during calibration
-- In-depth reflow testing
-- LED brightness control (in firmware)
+| Capability | Factory Firmware | MCCT-Reflow Firmware |
+|---|:---:|:---:|
+| Automatic and manual PID tuning | ✅ | ✅ |
+| Manual temperature offset | ✅ | ✅ |
+| Overtemperature shutdown | ✅ | ✅ |
+| Last config saved to flash | ✅ | ✅ |
+| Easy to use menu | ❌ | ✅ |
+| Automatic timer shutdown | ❌ | ✅ |
+| Customizable reflow curves for Sn63Pb37, SAC305, and Sn42Bi58 pastes | ❌ | ✅ |
+| Optional calibration routine with external probe | ❌ | ✅ |
+| Highly configurable | ❌ | ✅ |
+| LED brightness control in firmware *(planned)* | ❌ | 🚧 |
 
 ## Development Environment + Flashing Setup 
 
@@ -80,6 +75,7 @@ The first flash may require power cycling the chip to get it to reset, as the re
 ### Linux
 
 - Building/configuring is not yet supported, but you can probably still flash the binary.
+- You must have arduino-cli
 
 ### Flash From Binary
 
@@ -112,3 +108,8 @@ The first flash may require power cycling the chip to get it to reset, as the re
 - There are some differences to the original firmware. By default, there is a 10-minute interaction timeout at temperatures over 120C, and the plate will shut off.
 - The hotplate is capped to 250C with this firmware by default, which is plenty for reflowing. You can change this (`CFG_TARGET_MAX_C` and `CFG_FATAL_OVERTEMP_C`) if you'd like, at your own risk.
 - Use at your own risk! This thing gets hot, and if something goes wrong...
+
+## Credits
+
+- The Arduino ICP bridge and flashing tool are from [NuMicro-8051-prog](https://github.com/nikitalita/NuMicro-8051-prog) by Nikita Lita, based on [N76E003-playground](https://github.com/steve-m/N76E003-playground) by Steve Markgraf (MIT License, © 2020 Steve Markgraf, © 2024 Nikita Lita). It is included as a submodule and modified by `tools/nuvo51icp-local.patch`, which adds UART passthrough and other small fixes. The modified parts of the original code remain under the MIT License.
+- Register definitions are from Nuvoton's [MS51 BSP](https://github.com/OpenNuvoton/MS51_BSP), included unmodified as a submodule.

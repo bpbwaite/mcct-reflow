@@ -14,7 +14,7 @@
  *   9   VDD    5 V
  *  10   P1.5   digit 1 common anode (via resistor)
  *  11   P1.4   ENTER button to GND via 2k (pin is dedicated)
- *  12   P1.3   not connected
+ *  12   P1.3   SET button to GND via 2k (pin is dedicated)
  *  13   P1.2   digit 2 common anode
  *  14   P1.1   segment F cathode + UP button
  *  15   P1.0   segment A cathode
@@ -43,6 +43,7 @@
 #define PIN_DIGIT3      P00
 
 #define PIN_BTN_ENTER   P14
+#define PIN_BTN_SET     P13
 #define PIN_BTN_UP      PIN_SEG_F
 #define PIN_BTN_DOWN    PIN_SEG_B
 

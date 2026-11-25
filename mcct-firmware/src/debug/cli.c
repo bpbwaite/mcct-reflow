@@ -51,7 +51,7 @@ cli_action_t cli_service(void)
     case 'u': buttons_inject(BTN_UP); break;
     case 'd': buttons_inject(BTN_DOWN); break;
     case 'e': buttons_inject(BTN_ENTER); break;
-    case 'E': buttons_inject(BTN_ENTER_LONG); break;
+    case 'E': buttons_inject(BTN_SET); break;
     case 't':
         telemetry_on = !telemetry_on;
         if (telemetry_on)

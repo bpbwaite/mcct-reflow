@@ -1,12 +1,12 @@
 /*
- * User interface state machine: three buttons, three digits.
+ * User interface state machine: four buttons, three digits.
  *
  *  boot      "[=]" splash, then STANDBY
- *  STANDBY   target flashes; UP/DOWN adjust; ENTER heats; hold ENTER = menu
+ *  STANDBY   target flashes (solid while adjusting); UP/DOWN adjust; ENTER heats; SET = menu
  *  HEAT      plate temperature, steady; right DP = heater on; UP/DOWN adjust
- *            the target (shown for a moment); ENTER stops; hold ENTER = menu
+ *            the target (shown for a moment); ENTER stops; SET = menu
  *  MENU      rFL (reflow) tun (auto-tune) P I d (PID) OFS (offset)
- *            rSt (factory reset); UP/DOWN browse, ENTER opens, hold = back
+ *            rSt (factory reset); UP/DOWN browse, ENTER opens, SET = back
  *  RUN       reflow / auto-tune: temperature + decimal-point animation;
  *            display flashes twice at each reflow waypoint; any button cancels
  *  IDLE      above CFG_IDLE_TIMEOUT_C with no input for CFG_IDLE_TIMEOUT_S:

@@ -57,7 +57,8 @@ void display_scan(void)
          * quasi-mode line low now. */
         buttons_raw = (PIN_BTN_ENTER ? 0 : BUTTON_RAW_ENTER)
                     | (PIN_BTN_UP    ? 0 : BUTTON_RAW_UP)
-                    | (PIN_BTN_DOWN  ? 0 : BUTTON_RAW_DOWN);
+                    | (PIN_BTN_DOWN  ? 0 : BUTTON_RAW_DOWN)
+                    | (PIN_BTN_SET   ? 0 : BUTTON_RAW_SET);
     }
 
     switch (slot) {

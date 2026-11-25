@@ -43,8 +43,8 @@ static __xdata struct {
     ms_t        now;                /* time of the event being handled */
     ms_t        entered;            /* blink phase reference */
     ms_t        last_input;
-    ms_t        adjusted;           /* last target change while heating */
-    uint8_t     previewing;
+    ms_t        adjusted;           /* last target change */
+    uint8_t     previewing;         /* target just changed: show it, solid */
     uint8_t     item;
     int16_t     value;              /* value being edited */
     uint8_t     flashing;
@@ -61,6 +61,7 @@ static void go(screen_t s)
     ui.screen = s;
     ui.entered = ui.now;
     ui.last_input = ui.now;
+    ui.previewing = 0;
 }
 
 static void show_message(const char *text)
@@ -90,6 +91,8 @@ static void adjust_target(int8_t delta)
 {
     settings.target_c = fx_clamp16(settings.target_c + delta, CFG_TARGET_MIN_C, CFG_TARGET_MAX_C);
     settings_changed();
+    ui.previewing = 1;
+    ui.adjusted = ui.now;
 }
 
 /* ------------------------------------------------------- edit screens */
@@ -163,7 +166,6 @@ void ui_init(void)
 {
     ui.now = clock_ms();
     ui.flashing = 0;
-    ui.previewing = 0;
     ui.idle_steps = 0;
     go(SCR_SPLASH);
 }
@@ -199,10 +201,6 @@ void ui_button(btn_event_t ev)
         if (delta) {
             adjust_target(delta);
             proc_hold(TEMP_DC(settings.target_c));
-            if (!ui.previewing)
-                ui.entered = ui.now;        /* start the preview blink "on" */
-            ui.previewing = 1;
-            ui.adjusted = ui.now;
         } else if (ev == BTN_ENTER)
             stop_to_standby();
         else
@@ -298,13 +296,11 @@ static bool compose(void)
         return false;
     case SCR_STANDBY:
         render_int(settings.target_c);
-        return true;
+        return !ui.previewing;
     case SCR_HEAT:
-        if (ui.previewing && MS_ELAPSED(ui.now, ui.adjusted) >= CFG_PREVIEW_MS)
-            ui.previewing = 0;
         if (ui.previewing) {
             render_int(settings.target_c);
-            return true;
+            return false;
         }
         render_int(temp_round_c(ui.pv));
         if (heater_is_on())
@@ -350,6 +346,11 @@ void ui_render(void)
     if ((ui.screen == SCR_MENU || ui.screen == SCR_EDIT)
         && MS_ELAPSED(ui.now, ui.last_input) >= CFG_MENU_TIMEOUT_MS)
         leave_menu();
+
+    if (ui.previewing && MS_ELAPSED(ui.now, ui.adjusted) >= CFG_PREVIEW_MS) {
+        ui.previewing = 0;
+        ui.entered = ui.now;                /* resume blinking with "on" */
+    }
 
     if (compose() && MS_ELAPSED(ui.now, ui.entered) % CFG_BLINK_PERIOD_MS >= CFG_BLINK_ON_MS)
         render_blank();

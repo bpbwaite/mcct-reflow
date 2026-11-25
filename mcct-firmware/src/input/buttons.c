@@ -5,12 +5,14 @@
 #define DEBOUNCE_POLLS  (CFG_DEBOUNCE_MS / CFG_BUTTON_POLL_MS)
 #define HELD_MAX_MS     60000u
 
-enum { KEY_ENTER, KEY_UP, KEY_DOWN, KEY_COUNT };
+enum { KEY_ENTER, KEY_UP, KEY_DOWN, KEY_SET, KEY_COUNT };
 
 typedef struct {
     uint8_t  integrator;        /* 0 = released .. DEBOUNCE_POLLS = pressed */
     uint8_t  pressed;
+#if CFG_ENTER_HOLD_IS_SET
     uint8_t  long_sent;
+#endif
     uint16_t held_ms;
     uint16_t next_repeat_ms;
 } key_state_t;
@@ -19,7 +21,7 @@ static __xdata key_state_t keys[KEY_COUNT];
 static __xdata btn_event_t injected;
 
 static const uint8_t __code raw_bits[KEY_COUNT] = {
-    BUTTON_RAW_ENTER, BUTTON_RAW_UP, BUTTON_RAW_DOWN
+    BUTTON_RAW_ENTER, BUTTON_RAW_UP, BUTTON_RAW_DOWN, BUTTON_RAW_SET
 };
 
 void buttons_init(void)
@@ -59,7 +61,9 @@ static int8_t debounce(__xdata key_state_t *k, uint8_t down)
     if (!k->pressed && k->integrator == DEBOUNCE_POLLS) {
         k->pressed = 1;
         k->held_ms = 0;
+#if CFG_ENTER_HOLD_IS_SET
         k->long_sent = 0;
+#endif
         k->next_repeat_ms = CFG_REPEAT_DELAY_MS;
         return 1;
     }
@@ -74,15 +78,19 @@ static int8_t debounce(__xdata key_state_t *k, uint8_t down)
 
 static btn_event_t poll_enter(int8_t edge)
 {
+#if CFG_ENTER_HOLD_IS_SET
     __xdata key_state_t *k = &keys[KEY_ENTER];
 
     if (edge < 0)
         return k->long_sent ? BTN_NONE : BTN_ENTER;
     if (k->pressed && !k->long_sent && k->held_ms >= CFG_LONG_PRESS_MS) {
         k->long_sent = 1;
-        return BTN_ENTER_LONG;
+        return BTN_SET;
     }
     return BTN_NONE;
+#else
+    return edge < 0 ? BTN_ENTER : BTN_NONE;
+#endif
 }
 
 static bool poll_repeat(__xdata key_state_t *k, int8_t edge)
@@ -110,6 +118,8 @@ btn_event_t buttons_poll(uint8_t raw)
         injected = BTN_NONE;
         return ev;
     }
+    if (edge[KEY_SET] > 0)
+        return BTN_SET;
     ev = poll_enter(edge[KEY_ENTER]);
     if (ev != BTN_NONE)
         return ev;

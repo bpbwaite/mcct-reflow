@@ -18,6 +18,7 @@
 #define BUTTON_RAW_ENTER    0x01
 #define BUTTON_RAW_UP       0x02
 #define BUTTON_RAW_DOWN     0x04
+#define BUTTON_RAW_SET      0x08
 
 void display_init(void);
 

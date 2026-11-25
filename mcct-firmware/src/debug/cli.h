@@ -1,7 +1,7 @@
 /*
  * Console commands and telemetry for bench / hardware-in-the-loop work.
  *
- *   u d e E   press UP / DOWN / ENTER / long ENTER
+ *   u d e E   press UP / DOWN / ENTER / SET
  *   t         telemetry on/off: one CSV line per control period
  *   s         settings: target,offset,profile,kp_x10,ti,td,loss_x1000,cap_x10,ambient
  *   S         plant simulator on/off (CFG_PLANT_SIM)

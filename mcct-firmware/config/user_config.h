@@ -115,7 +115,7 @@
 #define CFG_SPLASH_MS                   1200    /* "[=]" at boot */
 #define CFG_BLINK_PERIOD_MS             1000
 #define CFG_BLINK_ON_MS                 600
-#define CFG_PREVIEW_MS                  2000    /* setpoint shown after an adjustment while heating */
+#define CFG_PREVIEW_MS                  2000    /* target shown, solid, this long after an adjustment */
 #define CFG_MENU_TIMEOUT_MS             20000
 #define CFG_ANIMATION_STEP_MS           150
 #define CFG_WAYPOINT_FLASH_MS           200     /* "flash twice": off/on/off/on, each this long */
@@ -124,7 +124,8 @@
 /* -------------------------------------------------------------- buttons */
 #define CFG_BUTTON_POLL_MS              10
 #define CFG_DEBOUNCE_MS                 30
-#define CFG_LONG_PRESS_MS               1000    /* ENTER held this long = "set" (menu / back) */
+#define CFG_ENTER_HOLD_IS_SET           0       /* 1: holding ENTER also works as SET (menu / back) */
+#define CFG_LONG_PRESS_MS               1000    /* ... when held this long */
 /* UP/DOWN auto-repeat speeds up the longer they are held. */
 #define CFG_REPEAT_DELAY_MS             500
 #define CFG_REPEAT_SLOW_MS              200

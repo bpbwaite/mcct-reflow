@@ -5,8 +5,9 @@
  * - Debounce: a button must read the same for CFG_DEBOUNCE_MS.
  * - UP / DOWN: an event on press, then auto-repeat after CFG_REPEAT_DELAY_MS
  *   that speeds up the longer the button is held.
- * - ENTER: BTN_ENTER on release of a short press, BTN_ENTER_LONG once when
- *   held for CFG_LONG_PRESS_MS (the "set" action: menu / back).
+ * - ENTER: BTN_ENTER on release. With CFG_ENTER_HOLD_IS_SET, holding it for
+ *   CFG_LONG_PRESS_MS gives BTN_SET once instead.
+ * - SET: BTN_SET (menu / back) on press.
  */
 #ifndef INPUT_BUTTONS_H
 #define INPUT_BUTTONS_H
@@ -18,7 +19,7 @@ typedef enum {
     BTN_UP,
     BTN_DOWN,
     BTN_ENTER,
-    BTN_ENTER_LONG
+    BTN_SET
 } btn_event_t;
 
 void buttons_init(void);

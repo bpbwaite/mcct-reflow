@@ -18,7 +18,7 @@
  *   sinks LED current strongly but only pulls up weakly, so the UP/DOWN
  *   buttons sharing segment F/B can pull those lines low without fighting
  *   a push-pull driver, and the scan reads them back as inputs.
- * - ENTER and the unused P1.3: quasi (weak pull-up).
+ * - ENTER and SET: quasi (weak pull-up).
  * - ADC pin: input only, digital buffer disabled in adc_init().
  * - UART pins: quasi, latched high.
  */

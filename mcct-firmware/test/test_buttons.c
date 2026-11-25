@@ -15,7 +15,7 @@ static void run(uint8_t raw, uint16_t duration) __reentrant
         ev = buttons_poll(raw);
         if (ev == BTN_UP) ups++;
         if (ev == BTN_ENTER) shorts++;
-        if (ev == BTN_ENTER_LONG) longs++;
+        if (ev == BTN_SET) longs++;
     }
 }
 
@@ -68,16 +68,30 @@ void test_buttons(void)
     CHECK_EQ(shorts, 1);
     CHECK_EQ(longs, 0);
 
-    /* ENTER held: one long event, nothing on release */
+    /* ENTER held: SET once and nothing on release if enabled, else ENTER on
+     * release like a short press */
     reset_counts();
     run(BUTTON_RAW_ENTER, CFG_LONG_PRESS_MS + 500);
-    CHECK_EQ(longs, 1);
-    run(0, 100);
+    CHECK_EQ(longs, CFG_ENTER_HOLD_IS_SET);
     CHECK_EQ(shorts, 0);
+    run(0, 100);
+    CHECK_EQ(shorts, !CFG_ENTER_HOLD_IS_SET);
+    CHECK_EQ(longs, CFG_ENTER_HOLD_IS_SET);
+
+    /* SET: one event on press, none while held or on release */
+    reset_counts();
+    run(BUTTON_RAW_SET, CFG_DEBOUNCE_MS - CFG_BUTTON_POLL_MS);
+    run(0, 100);
+    CHECK_EQ(longs, 0);
+    run(BUTTON_RAW_SET, CFG_DEBOUNCE_MS);
     CHECK_EQ(longs, 1);
+    run(BUTTON_RAW_SET, CFG_LONG_PRESS_MS + 500);
+    run(0, 100);
+    CHECK_EQ(longs, 1);
+    CHECK_EQ(shorts, 0);
 
     /* injected events (debug console) come out on the next poll */
-    buttons_inject(BTN_ENTER_LONG);
-    CHECK_EQ(buttons_poll(0), BTN_ENTER_LONG);
+    buttons_inject(BTN_SET);
+    CHECK_EQ(buttons_poll(0), BTN_SET);
     CHECK_EQ(buttons_poll(0), BTN_NONE);
 }

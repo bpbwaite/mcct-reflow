@@ -41,6 +41,20 @@ void test_ui(void)
     /* UP/DOWN adjust the target, clamped to the range */
     press(BTN_UP);
     CHECK_EQ(settings.target_c, CFG_TARGET_DEFAULT_C + 1);
+
+    /* ... and the target stays solid until a while after the last press,
+     * then blinks again, starting "on" */
+    for (i = 0; i < 40; i++) {              /* held: a repeat every 200 ms */
+        at(fake_now + 200);
+        CHECK(frame_is_int(settings.target_c));
+        press(BTN_UP);
+    }
+    for (i = 0; i < CFG_PREVIEW_MS / 100; i++) {
+        at(fake_now + 100);
+        CHECK(frame_is_int(settings.target_c));
+    }
+    at(fake_now + CFG_BLINK_ON_MS + 50);
+    CHECK(frame_is_blank());
     for (i = 0; i < 400; i++)
         ui_button(BTN_UP);
     CHECK_EQ(settings.target_c, CFG_TARGET_MAX_C);
@@ -63,11 +77,13 @@ void test_ui(void)
     /* adjusting while heating previews the target, then returns */
     press(BTN_DOWN);
     CHECK(frame_is_int(199));
+    at(fake_now + CFG_BLINK_ON_MS + 50);    /* solid, not blinking */
+    CHECK(frame_is_int(199));
     at(fake_now + CFG_PREVIEW_MS + 100);
     CHECK(frame_is_int(27));
 
-    /* long ENTER: settings menu; UP/DOWN browse; long ENTER goes back */
-    press(BTN_ENTER_LONG);
+    /* SET: settings menu; UP/DOWN browse; SET goes back */
+    press(BTN_SET);
     CHECK(frame_is_text("rFL"));
     press(BTN_UP);
     CHECK(frame_is_text("tun"));
@@ -79,11 +95,11 @@ void test_ui(void)
     press(BTN_ENTER);
     CHECK_EQ(settings.kp_x10, CFG_PID_KP_X10_DEFAULT + 1);
     CHECK(frame_is_text("P"));
-    press(BTN_ENTER_LONG);
+    press(BTN_SET);
     CHECK_EQ(proc_mode(), PROC_HOLD);                       /* still heating */
 
     /* the menu times out back to the main screen */
-    press(BTN_ENTER_LONG);
+    press(BTN_SET);
     at(fake_now + CFG_MENU_TIMEOUT_MS + 10);
     CHECK(!frame_is_text("rFL"));
 
@@ -92,7 +108,7 @@ void test_ui(void)
     CHECK_EQ(proc_mode(), PROC_OFF);
 
     /* reflow: pick a profile by its label, start, any button cancels */
-    press(BTN_ENTER_LONG);
+    press(BTN_SET);
     press(BTN_ENTER);
     CHECK(frame_is_text(profiles[settings.profile].label));
     press(BTN_UP);
@@ -104,7 +120,7 @@ void test_ui(void)
     CHECK_EQ(proc_mode(), PROC_OFF);
 
     /* a finished run shows "End" until a button is pressed */
-    press(BTN_ENTER_LONG);
+    press(BTN_SET);
     press(BTN_ENTER);
     press(BTN_ENTER);
     ui_process_event(PROC_EV_DONE);
@@ -138,7 +154,7 @@ void test_ui(void)
 
     /* factory reset from the menu */
     settings.target_c = 123;
-    press(BTN_ENTER_LONG);
+    press(BTN_SET);
     for (i = 0; i < 6; i++)
         press(BTN_UP);
     CHECK(frame_is_text("rSt"));

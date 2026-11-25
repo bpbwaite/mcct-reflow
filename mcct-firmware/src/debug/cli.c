@@ -9,6 +9,7 @@
 #include "control/thermal_model.h"
 #include "sensor/temperature.h"
 #include "storage/settings.h"
+#include "version_gen.h"
 
 static __xdata uint8_t telemetry_on;
 
@@ -20,7 +21,7 @@ static void put_field(int32_t v)
 
 void cli_banner(void)
 {
-    console_puts("\nMCCT hot plate  (h = help)\n");
+    console_puts("\nMCCT hot plate " FW_VERSION "  (h = help)\n");
 }
 
 void cli_report(const char *what, int16_t value)

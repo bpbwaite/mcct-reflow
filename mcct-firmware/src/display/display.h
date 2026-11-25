@@ -8,7 +8,7 @@
  * digit-at-a-time scanning through a shared anode resistor would.
  *
  * A scan frame is 8 segment slots plus one dark slot in which the buttons
- * sharing segment lines (UP = F, DOWN = B) are read, at 2 kHz -> 222 Hz.
+ * sharing segment lines (UP = F, DOWN = B, SET = A) are read, at 2 kHz -> 222 Hz.
  */
 #ifndef DISPLAY_DISPLAY_H
 #define DISPLAY_DISPLAY_H

@@ -14,12 +14,12 @@
  *   9   VDD    5 V
  *  10   P1.5   digit 1 common anode (via resistor)
  *  11   P1.4   ENTER button to GND via 2k (pin is dedicated)
- *  12   P1.3   SET button to GND via 2k (pin is dedicated)
+ *  12   P1.3   not connected
  *  13   P1.2   digit 2 common anode
- *  14   P1.1   segment F cathode + UP button
- *  15   P1.0   segment A cathode
+ *  14   P1.1   segment F cathode + UP button (to GND via 2k)
+ *  15   P1.0   segment A cathode + SET button (to GND via 2k)
  *  16   P0.0   digit 3 common anode
- *  17   P0.1   segment B cathode + DOWN button
+ *  17   P0.1   segment B cathode + DOWN button (to GND via 2k)
  *  18   P0.2   ICPCK / UART1 RXD (console)
  *  19   P0.3   heater optocoupler: high = triac conducts
  *  20   P0.4   segment G cathode
@@ -29,7 +29,7 @@
 
 #include "numicro_8051.h"
 
-#define PIN_SEG_A       P10
+#define PIN_SEG_A       P10     /* shared with SET */
 #define PIN_SEG_B       P01     /* shared with DOWN */
 #define PIN_SEG_C       P17
 #define PIN_SEG_D       P05
@@ -43,9 +43,9 @@
 #define PIN_DIGIT3      P00
 
 #define PIN_BTN_ENTER   P14
-#define PIN_BTN_SET     P13
 #define PIN_BTN_UP      PIN_SEG_F
 #define PIN_BTN_DOWN    PIN_SEG_B
+#define PIN_BTN_SET     PIN_SEG_A
 
 #define PIN_HEATER      P03
 

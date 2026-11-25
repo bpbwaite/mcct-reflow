@@ -28,6 +28,7 @@
 #include "control/heater.h"
 #include "debug/console.h"
 #include "cal/cal_hold.h"
+#include "version_gen.h"
 
 #define SAMPLE_TIMEOUT_MS   (4 * CFG_CONTROL_PERIOD_MS)
 #define SENSOR_MAX_Q16      ((uint16_t)(65536UL * CFG_SENSOR_MAX_PERMILLE / 1000))
@@ -218,7 +219,7 @@ void main(void)
 
     render_text("[=]");
     display_write(render_frame);
-    say("MCCT calibration: UP/DOWN target mV, ENTER start/stop");
+    say("MCCT calibration " FW_VERSION ": UP/DOWN target mV, ENTER start/stop");
     console_puts("t_ms,q16,mv_x10,set_mv,duty,state\n");
 
     if (cause == RESET_WATCHDOG)

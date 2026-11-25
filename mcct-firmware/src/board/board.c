@@ -15,10 +15,10 @@
  * Pin modes (MxM1, PxM2): quasi = 0,0  push-pull = 0,1  input = 1,0.
  * - Heater and digit anodes: push-pull, start low (off).
  * - Segment cathodes: quasi-bidirectional, latched high (off). Quasi mode
- *   sinks LED current strongly but only pulls up weakly, so the UP/DOWN
- *   buttons sharing segment F/B can pull those lines low without fighting
+ *   sinks LED current strongly but only pulls up weakly, so the UP/DOWN/SET
+ *   buttons sharing segment F/B/A can pull those lines low without fighting
  *   a push-pull driver, and the scan reads them back as inputs.
- * - ENTER and SET: quasi (weak pull-up).
+ * - ENTER: quasi (weak pull-up). P1.3 is not connected and stays quasi high.
  * - ADC pin: input only, digital buffer disabled in adc_init().
  * - UART pins: quasi, latched high.
  */

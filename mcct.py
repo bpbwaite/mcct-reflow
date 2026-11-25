@@ -123,8 +123,14 @@ def cflags(sim):
 
 
 def generate():
-    """Calibration polynomial and reflow profile tables."""
+    """Version, calibration polynomial and reflow profile tables."""
     GEN.mkdir(parents=True, exist_ok=True)
+    m = re.search(r'^version = "([^"]+)"', (REPO / "pyproject.toml").read_text(encoding="utf-8"), re.M)
+    if not m:
+        raise Error("no version in pyproject.toml")
+    header, text = GEN / "version_gen.h", f'#define FW_VERSION "{m.group(1)}"\n'
+    if not header.exists() or header.read_text(encoding="utf-8") != text:
+        header.write_text(text, encoding="utf-8")
     py = [sys.executable, "-I"]
     run(py + [SCRIPTS / "gen_calibration.py", ROOT / "calibration" / "adc_to_temperature.csv",
               GEN / "calibration_gen.h"], "code generation")

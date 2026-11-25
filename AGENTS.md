@@ -47,8 +47,9 @@ One script for build, test, flash, monitor and the bridge; its docstring lists
 the commands. Standard library plus pyserial. Keep it working on Windows and
 Linux. Linux has been checked up to opening the port, not for building.
 
-- Steps: generate `build/generated/calibration_gen.h` and `profiles_gen.c`
-  (rewritten only when their content changes) -> compile `src/**/*.c`
+- The firmware version is `version` in `pyproject.toml` (then run `uv lock`).
+- Steps: generate `version_gen.h`, `calibration_gen.h` and `profiles_gen.c` in
+  `build/generated` (rewritten only when their content changes) -> compile `src/**/*.c`
   incrementally -> link (in sorted order, so images are reproducible) -> refuse `__xdata` initialisers (see below)
   -> hex/bin -> size report.
 - Small memory model; code limited to 0x3F00: the last two 128-byte APROM
@@ -136,7 +137,7 @@ scripts/      code generators
   one control step per finished ADC window (250 ms = 15 cycles of 60 Hz, so
   mains hum averages out), one UI step per 10 ms.
 - **Display.** One *segment* per slot across all three digits, plus a dark
-  slot in which the button lines (shared with segments F and B) are read.
+  slot in which the button lines (shared with segments F, B and A) are read.
 - **Control.** setpoint ramp (model-limited, eased into the target) ->
   feed-forward from the thermal model (power to hold + power to ramp) ->
   PID on the residual (derivative on filtered error, conditional
@@ -163,8 +164,8 @@ things casually.
   3 LED currents.
 - **LEDs run at full brightness**, with no dimming. This may change in the
   future (e.g. PWM on the common anodes).
-- **Quasi-bidirectional segment cathodes:** UP/DOWN pull segment lines F/B to
-  ground, so a pressed button must not fight a push-pull high. Anodes and the
+- **Quasi-bidirectional segment cathodes:** UP/DOWN/SET pull segment lines
+  F/B/A to ground, so a pressed button must not fight a push-pull high. Anodes and the
   heater are push-pull; the heater is active high and starts low.
 - **Mains:** the code assumes a zero-crossing optotriac and `CFG_MAINS_HZ`.
 - **Calibration CSV keeps a nominal `vdd_v = 5.0`**, because readings are
@@ -269,9 +270,8 @@ tracked).
 | `cal_plateaus.py` | Runs the plateau calibration (needs the `--cal` firmware). |
 | `fit_plateaus.py` | Fits its CSVs; `--write` updates the firmware calibration. |
 
-The current calibration, model and PID defaults were fitted offline and have
-not yet been run closed-loop on the plate. On other plates, `tun` in the menu
-measures the model and PID.
+The model and PID defaults were fitted offline. On other plates, `tun` in the
+menu measures the model and PID.
 
 ## Calibration run
 

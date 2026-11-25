@@ -645,7 +645,7 @@
         "uuid": "c9b01fdd-e7fd-4266-a6f2-254c98b01aee"
       }
     ],
-    "used_designators": "CN2,FID5-8,R16,RH1-2,LA1,W3,C1",
+    "used_designators": "CN2,FID5-8,R16,RH1-2,LA1,W3,C1,#PWR15",
     "variants": []
   },
   "sheets": [

@@ -43,6 +43,7 @@ Planned (TODO):
 
 ### Windows Setup
 
+If you just want to flash the defaults, see [flash from binary](#flash-from-binary). \
 Install [uv](https://docs.astral.sh/uv/) \
 Get the Nuvoton BSP and ICP programmer bridge repositories:
 ```
@@ -76,10 +77,12 @@ Subcommands:
 The first flash may require power cycling the chip to get it to reset, as the reset pin could be disabled by factory firmware. \
 ***DISCONNECT THE PROGRAMMING WIRES BEFORE PLUGGING THE PLATE BACK IN***
 
-### Linux (untested)
+### Linux
 
-- Building/configuring is not yet supported.
-- Wiring instructions are the same.
+- Building/configuring is not yet supported, but you can probably still flash the binary.
+
+### Flash From Binary
+
 - Install uv and git, get the submodules, and load the bridge onto the Uno.
 - Download the `.bin` from the latest release and flash it with `uv run mcct.py flash --bin mcct.bin`
 

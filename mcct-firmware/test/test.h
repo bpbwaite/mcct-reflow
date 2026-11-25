@@ -4,7 +4,7 @@
  * Tests are compiled by the same SDCC, memory model and options as the
  * firmware, so integer widths, overflow and fixed-point behaviour are
  * exactly what runs on the chip. Output and "stop" go through ucsim's
- * simulator interface (a magic XRAM byte); build.ps1 -Test runs them.
+ * simulator interface (a magic XRAM byte); mcct.py test runs them.
  */
 #ifndef TEST_TEST_H
 #define TEST_TEST_H

@@ -1,4 +1,4 @@
-"""Plateau calibration run (PC side), for the -Cal firmware.
+"""Plateau calibration run (PC side), for the --cal firmware.
 
 Usage: uv run cal_plateaus.py <port> <out.csv> [--mv 700 800 ...] [--max-probe <degC>]
 

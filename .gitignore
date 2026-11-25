@@ -6,7 +6,7 @@ tools/sdcc/
 .venv/
 tools/arduino-cli/
 
-# icp_probe build inputs copied from the NuMicro-8051-prog submodule by bridge.ps1 -Probe
+# icp_probe build inputs copied from the NuMicro-8051-prog submodule by mcct.py bridge --probe
 tools/icp_probe/arduino.cpp
 tools/icp_probe/delay.h
 tools/icp_probe/n51_icp.c

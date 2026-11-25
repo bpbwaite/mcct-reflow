@@ -1,5 +1,5 @@
 /*
- * Sensor calibration firmware (.\build.ps1 -Cal). A separate program with
+ * Sensor calibration firmware (mcct.py build --cal). A separate program with
  * its own main(): it links only the drivers it needs and no temperature
  * logic. It holds the plate at a sensor VOLTAGE (cal_hold.c), so each
  * plateau pairs a steady reading with a steady reference probe.

@@ -21,10 +21,10 @@ with a top-level folder. Commands run from the repo root if they name one.
 - Logic modules never include `board/pins.h` / `numicro_8051.h`: they must
   link into the simulator tests. Hardware access goes through the small
   driver APIs (`board.h`, `display.h`, `adc.h`, `flash.h`, `tick.h`), which
-  `test/fakes.c` replaces. `build.ps1 $HardwareSources` lists the driver files.
-- After changes run `.\build.ps1 -Test` (from `mcct-firmware`), then
-  `.\build.ps1` and watch the size line: the product build must leave headroom,
-  and `-Sim` must fit (it is nearly full).
+  `test/fakes.c` replaces. `HARDWARE_SOURCES` in `mcct.py` lists the driver files.
+- After changes run `uv run mcct.py test`, then `uv run mcct.py build` (from
+  the repo root) and watch the size line: the product build must leave headroom,
+  and `--sim` must fit (it is nearly full).
 
 ## Toolchain
 - Top priority: Track local patches to the OpenNuvoton library BSP. The BSP is
@@ -33,36 +33,37 @@ with a top-level folder. Commands run from the repo root if they name one.
   with `git -C tools/MS51_BSP diff`) and list them here, the same way the
   bridge's patch works (see Programmer tools). The firmware only uses the
   BSP headers (SFR names); no BSP functions are linked.
-- SDCC 4.6.0 lives in `tools/sdcc`. `bin/cc1` must be named `cc1.exe`, and
-  `sdcpp` only finds it via PATH, so `build.ps1` prepends `tools/sdcc/bin`.
+- SDCC 4.6.0 and arduino-cli are taken from `tools/` first, then PATH. On
+  Windows `sdcc/bin/cc1` must be named `cc1.exe`, and `sdcpp` only finds it via
+  PATH, so `mcct.py` prepends `tools/sdcc/bin`.
 - Nuvoton headers test `__SDCC__`, which SDCC doesn't define (it uses `__SDCC`):
   the build passes `-D__SDCC__`.
 - Python runs through uv (`pyproject.toml` / `uv.lock` in the repo root; numpy
   and matplotlib are in the `tuning` group). The generators use only the
   standard library.
 
-## build.ps1
+## mcct.py (repo root)
+One script for build, test, flash, monitor and the bridge; its docstring lists
+the commands. Standard library plus pyserial. Keep it working on Windows and
+Linux. Linux has been checked up to opening the port, not for building.
+
 - Steps: generate `build/generated/calibration_gen.h` and `profiles_gen.c`
   (rewritten only when their content changes) -> compile `src/**/*.c`
-  incrementally -> link -> refuse `__xdata` initialisers (see below)
+  incrementally -> link (in sorted order, so images are reproducible) -> refuse `__xdata` initialisers (see below)
   -> hex/bin -> size report.
 - Small memory model; code limited to 0x3F00: the last two 128-byte APROM
   pages (0x3F00-0x3FFF) are the settings store (`SETTINGS_FLASH_BASE`).
-- `-Sim` adds `-DCFG_PLANT_SIM=2` (bench build that boots simulated, real
+- `--sim` adds `-DCFG_PLANT_SIM=2` (bench build that boots simulated, real
   heater output held off). The simulator doesn't fit in the product build.
-- `-Cal` builds the calibration firmware (`src/cal/`): it holds a sensor
-  voltage, with no temperature logic. Its tests (`-Cal -Test`) are a separate
+- `build --cal` makes the calibration firmware (`src/cal/`): it holds a sensor
+  voltage, with no temperature logic. Its tests (`test --cal`) are a separate
   image because the main one has no internal RAM left.
-- `-Test` links every non-hardware module with `test/*.c` for a plain 8052
+- `test` links every non-hardware module with `test/*.c` for a plain 8052
   (64 KB code) and runs it in `ucsim_51` with the simulator interface at XRAM
-  0xFFFF (print + stop). ucsim must get its own hidden console
-  (`Start-Process -WindowStyle Hidden`): attached to ours it runs ~8x slower.
-- `-Flash` writes APROM **and** CONFIG, replacing the whole image, so settings
+  0xFFFF (print + stop). On Windows ucsim must get its own hidden console:
+  attached to ours it runs ~8x slower.
+- `flash` writes APROM **and** CONFIG (also with `--bin`), replacing the whole image, so settings
   reset to defaults.
-- Windows PowerShell 5.1 turns native stderr into terminating errors under
-  `$ErrorActionPreference = 'Stop'`; `Invoke-Tool` / `Invoke-Python` /
-  `Invoke-Isp` relax it. PowerShell variables are case-insensitive: `$sim`
-  *is* the `-Sim` switch.
 
 ## 8051 / SDCC rules
 - **No initialised `__xdata` variables (XDATA initialisers).** SDCC's startup
@@ -117,7 +118,7 @@ with a top-level folder. Commands run from the repo root if they name one.
 src/
   main.c      boot, main loop, fatal handling
   board/      clock, pin map (pins.h), watchdog, reset cause, 2 kHz tick ISR
-  cal/        calibration firmware (-Cal)
+  cal/        calibration firmware (`--cal`)
   display/    segment-multiplexed driver + button sampling, font, rendering
   input/      debounce, long press, accelerating auto-repeat
   sensor/     ADC window averaging (ISR), calibration polynomial
@@ -240,13 +241,14 @@ first. Every local change is marked with a `LOCAL PATCH` comment.
   is half-duplex in practice.
 
 ## Building / uploading the bridge
-Use `bridge.ps1` (wraps the local arduino-cli): it passes the required
-`-DCACHED_ROM_READ=0 -DSERIAL_RX_BUFFER_SIZE=256` (the 64 KB read cache can't
-fit in the Uno's RAM) and `PASSTHROUGH_BAUD`, which must match
-`CFG_CONSOLE_BAUD` in `mcct-firmware/config/user_config.h`.
+`uv run mcct.py bridge` passes the required `-DCACHED_ROM_READ=0
+-DSERIAL_RX_BUFFER_SIZE=256` (the 64 KB read cache can't fit in the Uno's RAM)
+and sets `PASSTHROUGH_BAUD` from `CFG_CONSOLE_BAUD`. `mcct.py` applies the local
+patch to a clean submodule by itself, and refuses to continue if the submodule
+is neither clean nor patched.
 
 ## Troubleshooting "Device not found"
-1. Upload the read-only probe with `.\tools\bridge.ps1 -Probe -Port <port>` and
+1. Upload the read-only probe with `uv run mcct.py bridge --probe` and
    open the port at 115200. It holds reset low and loops ICP entry; if the
    reset pin is disabled, power-cycle the target while it runs. It prints
    DEVICE_ID / CID / CONFIG. Uploading it replaces the bridge, so re-upload the
@@ -264,7 +266,7 @@ tracked).
 
 | Script | Does |
 |---|---|
-| `cal_plateaus.py` | Runs the plateau calibration (needs the `-Cal` firmware). |
+| `cal_plateaus.py` | Runs the plateau calibration (needs the `--cal` firmware). |
 | `fit_plateaus.py` | Fits its CSVs; `--write` updates the firmware calibration. |
 
 The current calibration, model and PID defaults were fitted offline and have
@@ -274,8 +276,8 @@ measures the model and PID.
 ## Calibration run
 
 Keep the heater (mains) power off while flashing, and use a link that avoids
-the ground loop (see Hardware). From `mcct-firmware`: `.\build.ps1 -Cal -Test`,
-then `.\build.ps1 -Cal -Flash -Port <port>`.
+the ground loop (see Hardware). From the repo root: `uv run mcct.py test --cal`,
+then `uv run mcct.py flash --cal`.
 
 1. With someone at the plate, check the shutoffs: ENTER, Ctrl-C ("Chip confirms
    heater off"), a paused runner (host lost), USB pull. Any failure: cut power.

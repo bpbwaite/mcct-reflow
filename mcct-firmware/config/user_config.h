@@ -4,7 +4,7 @@
  * Chip options (lock bit, hardware watchdog, brown-out) are NOT here: they are
  * programmed into the MS51's CONFIG bytes from config/chip_config.json.
  * Reflow curves are the JSON files in profiles/, the sensor calibration is
- * calibration/adc_to_temperature.csv; both are compiled in by build.ps1.
+ * calibration/adc_to_temperature.csv; both are compiled in by mcct.py.
  *
  * Units: _C = whole degC, _DC = tenths of a degC, _MS / _S = time,
  * _PERCENT = percent of full heater power.
@@ -145,11 +145,11 @@
  *   0 = not compiled in (product build)
  *   1 = compiled in, toggled with console key 'S'
  *   2 = compiled in and running from power-up ('S' turns it off)
- * build.ps1 -Sim builds with 2 without editing this file. */
+ * mcct.py build --sim builds with 2 without editing this file. */
 #ifndef CFG_PLANT_SIM
 #define CFG_PLANT_SIM                   0
 #endif
-/* Calibration firmware (build.ps1 -Cal, src/cal/): holds a sensor voltage.
+/* Calibration firmware (mcct.py build --cal, src/cal/): holds a sensor voltage.
  * The ceiling is raw mV; 1850 mV is about 267 degC. */
 #define CFG_CAL_MIN_MV                  700
 #define CFG_CAL_MAX_MV                  1800    /* highest selectable hold */

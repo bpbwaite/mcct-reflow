@@ -18,11 +18,12 @@ An open alternative firmware for generic "MicroComputer Constant Temperature"-st
 | Overtemperature shutdown | ✅ | ✅ |
 | Last config saved to flash | ✅ | ✅ |
 | Easy to use menu | ❌ | ✅ |
-| Automatic timer shutdown | ❌ | ✅ |
 | Customizable reflow curves for Sn63Pb37, SAC305, and Sn42Bi58 pastes | ❌ | ✅ |
+| Automatic timer shutdown | ❌ | ✅ |
 | Optional calibration routine with external probe | ❌ | ✅ |
 | Highly configurable | ❌ | ✅ |
-| LED brightness control in firmware *(planned)* | ❌ | 🚧 |
+| Adjustable display brightness *(planned)* | ❌ | 🚧 |
+| Full control over USB *(planned)* | ❌ | 🚧 |
 
 ## Flashing Setup
 

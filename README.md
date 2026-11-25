@@ -7,7 +7,7 @@ An open alternative firmware for generic "MicroComputer Constant Temperature"-st
 - Tested on the 350W (110V, 400C) 100mm x 100mm model. (PCB: `SW-1010 V1.96`)
 - Don't use this device on circuits that are not 110V 60Hz.
 
-![source: amazon.com](/images/product.png)
+![](/images/product.png)
 
 
 ## Features
@@ -32,7 +32,7 @@ An open alternative firmware for generic "MicroComputer Constant Temperature"-st
 ***IMPORTANT: UNPLUG THE HOTPLATE FIRST*** 
 - Wire your programmer to the chip. The MS51FB9AE firmware must be flashed over ICP, and I use an Arduino Uno R3 as a bridge.
 ![](/images/header_pinout.png)
-- Be careful if you power the hot plate over AC. It will be partially disassembled while connected to the programmer. Do not touch the internals of the device at all while it is plugged in.
+- Be careful if you power the hot plate over AC. It will be partially disassembled while connected to the programmer. Do not touch the internals of the device at all while it is plugged in. You only need to do this if you are running a calibration routine or developing; otherwise, you don't even need to solder a connector to the PCB; simply hold the pins in place (with the device unplugged) during the flash.
 - Do not connect the +5V wire while the board is powered from its own supply. A common ground connection is fine, and actually required to complete the (optional) calibration.
 - While developing, especially reading from or calibrating the sensor, you must use a laptop on battery. An earthed PC will offset the ADC readings significantly, as the thermocouple is earthed and you will cause grounding issues.
 

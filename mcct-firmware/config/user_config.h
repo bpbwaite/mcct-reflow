@@ -36,8 +36,8 @@
 #define CFG_FATAL_OVERTEMP_C            280
 /* Raw sensor voltage outside this window (per mille of VDD) means the
  * sensor or its amplifier is open, shorted or unpowered. The sensor is a
- * compensated thermocouple amplifier that reads only a few mV at room
- * temperature, so the low limit is 0 (= no low-rail check). */
+ * compensated thermocouple amplifier that may read only a few hundred mV in a
+ * cold room, so the lower limit is 0 (=> no low-rail check). */
 #define CFG_SENSOR_MIN_PERMILLE         0
 #define CFG_SENSOR_MAX_PERMILLE         995
 /* Heating timeout: while the heater runs at or above this duty, the
@@ -63,9 +63,8 @@
 /* PID defaults, standard (ISA) form: u = Kp * (e + 1/Ti * integral(e) + Td * de/dt).
  * Kp in tenths of a percent of full power per degC, Ti and Td in seconds.
  * Ti = 0 disables the integral term. */
-/* Tuned offline (mcct-tuning/tune_pid.py) against the plate model fitted to
- * the 2026-11-22/23 runs, and checked against plates 15-25 % off and lags up
- * to ~11 s. */
+/* Tuned offline against a model fitted to logged runs, and checked against
+ * plates 15-25 % off and lags up to ~11 s. */
 #define CFG_PID_KP_X10_DEFAULT          30      /* 3.0 %/degC */
 #define CFG_PID_TI_S_DEFAULT            800
 #define CFG_PID_TD_S_DEFAULT            8
@@ -74,7 +73,7 @@
 /* Thermal model defaults (replaced by the auto-tuner's measurements):
  *   holding power = LOSS * (T - ambient),  LOSS in thousandths of %/degC
  *   ramping power = CAP * dT/dt,           CAP in tenths of %*s/degC
- * Fitted (mcct-tuning/plate_model.py): 152 J/K, losses 15 W at 100 degC
+ * Fitted to logged runs: 152 J/K, losses 15 W at 100 degC
  * and 55 W at 250 degC (convection + radiation) for the 350 W heater; LOSS
  * is the best straight line over 100..250 degC. */
 #define CFG_MODEL_LOSS_X1000_DEFAULT    64

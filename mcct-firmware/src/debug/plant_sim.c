@@ -3,7 +3,7 @@
 
 #if CFG_PLANT_SIM
 
-/* The plate fitted to the 2026-11-22/23 runs (mcct-tuning/plate_model.py):
+/* The plate fitted to logged runs:
  * 152 J/K, heat reaches it ~4 s after the heater (element 8 J/K through
  * 2 W/K), losses ~0.22 W/K averaged over 100..250 degC. */
 #define HEATER_MW_PER_DUTY  35          /* 350 W / 10000 */

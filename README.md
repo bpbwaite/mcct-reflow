@@ -4,8 +4,11 @@ An open alternative firmware for generic "MicroComputer Constant Temperature"-st
 
 ## Supported Hardware
 
+Don't use this device on circuits that are not 110V 60Hz.
+
 Tested on the 350W (110V, 400C) 100mm x 100mm model. (PCB: `SW-1010 V1.96`)
 ![source: amazon.com](/images/product.png)
+
 
 ## Features
 
@@ -17,7 +20,7 @@ Ported from the original firmware:
 
 New:
 - Improved menu
-- Automatic shutdown (10 min timeout)
+- Automatic shutdown
 - Customizable reflow curves for Sn63Pb37, SAC305, and Sn42Bi58 pastes
 - Fully configurable before compilation
 - Optional calibration routine (requires external probe)
@@ -25,6 +28,7 @@ New:
 Planned (TODO):
 - Checksum for serial communications during calibration
 - In-depth reflow testing
+- LED brightness control (in firmware)
 
 ## Quick Flash (Default Config)
 
@@ -34,7 +38,7 @@ Planned (TODO):
 - The first flash may require power cycling the chip to get it to reset, as the reset pin could be disabled by factory firmware.
 - ***DISCONNECT THE PROGRAMMING WIRES BEFORE PLUGGING THE PLATE BACK IN***
 
-## Devleopment Environment Setup
+## Development Environment Setup
 
 ***IMPORTANT INFO***
 - Be careful if you power the hot plate over AC. It will be partially disassembled while connected to the programmer. Do not touch the internals of the device at all while it is plugged in.
@@ -42,6 +46,7 @@ Planned (TODO):
 - While developing, especially reading from or calibrating the sensor, you must use a laptop on battery. An earthed PC will offset the ADC readings significantly, as the thermocouple is earthed and you will create a ground loop.
 
 Software Required:
+- Install [uv](https://docs.astral.sh/uv/)
 - Run `git config --global core.longpaths true` because the Nuvoton BSP submodule has paths over 150 characters, which breaks checkout under Windows' 260-character limit.
 - Get the Nuvoton BSP and ICP programmer bridge repositories:
 ```
@@ -93,6 +98,8 @@ cd mcct-firmware
 
 ## Disclaimers
 
-- This is not a reverse-engineered or decompilation of the original firmware. That firmware arrives locked to the chip, and must be erased to use this firmware.
+- This is not a reverse-engineering or decompilation of the original firmware. That firmware arrives locked to the chip, and must be erased to use this firmware.
 - The schematic is for pinout reference only; the PCB file only shows mounting hole locations.
+- There are some differences to the original firmware. By default, there is a 10-minute interaction timeout at temperatures over 120C, and the plate will shut off.
+- The hotplate is capped to 250C with this firmware by default, which is plenty for reflowing. You can change this (`CFG_TARGET_MAX_C` and `CFG_FATAL_OVERTEMP_C`) if you'd like, at your own risk.
 - Use at your own risk! This thing gets hot, and if something goes wrong...
